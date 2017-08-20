@@ -6,6 +6,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const keys = require('../config/keys');
 const User = mongoose.model('User');
+const recaptcha = require('./recaptcha');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -63,16 +64,21 @@ passport.use('local.signup',new LocalStrategy({
                 });
                 return done(null, false, req.flash('error', messages))
             }
-            // add new user
-            const admin = await User.findOne({admin: true})
-            let newUser = new User({ 
-                username: username,
-                email: req.body.email,
-                admin: !admin
-            })
-            newUser.password = newUser.encryptPassword(password);
-            newUser = await newUser.save();
-            return done(null, newUser);
+
+            recaptcha.validateRecaptcha(req.body.captcha, req.connection.remoteAddress).then(async () => {
+                // add new user
+                const admin = await User.findOne({admin: true})
+                let newUser = new User({ 
+                    username: username,
+                    email: req.body.email,
+                    admin: !admin
+                });
+                newUser.password = newUser.encryptPassword(password);
+                newUser = await newUser.save();
+                return done(null, newUser);
+            }).catch((e) => {
+                return done(null, false, req.flash('error', [e.error]))
+            });
         } catch(err) {
             return done(err);
         }

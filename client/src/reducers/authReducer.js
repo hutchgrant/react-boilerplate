@@ -1,4 +1,4 @@
-import { FETCH_USER, LOGOUT_USER } from '../actions/types';
+import { FETCH_USER, LOGOUT_USER, INIT_FORM } from '../actions/types';
 
 export default function(state = null, {type, payload}) {
     switch (type) {
@@ -10,6 +10,8 @@ export default function(state = null, {type, payload}) {
                 payload.token = localStorage.getItem('token', payload.token);                
             }
             return payload || false;
+        case INIT_FORM: 
+            return { ...state, error:null}        
         case LOGOUT_USER:
             localStorage.clear();
             return {username: null, token: null};

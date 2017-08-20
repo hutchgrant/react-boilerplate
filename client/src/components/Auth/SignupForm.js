@@ -6,8 +6,20 @@ import { connect } from 'react-redux';
 import AuthField from './AuthField';
 import authFields from './authFields';
 import * as actions from '../../actions';
+import ReCAPTCHA from 'react-google-recaptcha';
+  
+let captcha;
 
 class SignupForm extends Component {
+
+    constructor() {
+        super();
+        this.state = {values: null};
+    }
+
+    componentDidMount() {
+        this.props.initForm();
+    }
 
     renderFields() {
         return _.map(authFields.signup, ({label, name, type}) => {
@@ -24,6 +36,23 @@ class SignupForm extends Component {
         }
     }
 
+    onSubmit(values) {
+        captcha.execute();
+        this.setState({...this.state, values})
+        if(this.state.values){
+            if(this.state.values.captcha){
+                values.captcha = this.state.values.captcha
+                this.props.createUser(values, this.props.history)            
+            }
+        }
+    }
+    onChange(value) {
+        if(value !== null){
+            this.setState({values: {...this.state.values, captcha: value}});
+            this.props.createUser(this.state.values, this.props.history)
+        }
+    }
+    
     render() {
         return (
             <div className="login">
@@ -36,10 +65,17 @@ class SignupForm extends Component {
                             {this.renderError()}
                         </ul>
                     </div>
-                    <form className="form-signin" onSubmit={this.props.handleSubmit(value => this.props.createUser(value, this.props.history))}>
+                    <form className="form-signin" onSubmit={this.props.handleSubmit(values => this.onSubmit(values)) }>
                         <span id="reauth-email" className="reauth-email"></span>
                         {this.renderFields()}
-                        <button className="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign up</button>
+
+                        <ReCAPTCHA
+                            ref={(el) => { captcha = el; }}
+                            sitekey={process.env.REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY}
+                            size="invisible"
+                            onChange={this.onChange.bind(this)}
+                        />
+                        <button className="btn btn-lg btn-primary btn-block btn-signin" type="submit" >Sign up</button>
                     </form>
                     <div className="profile-footer">
                         <p>Already have an account? <Link to="/login">Login here</Link></p>
@@ -63,7 +99,10 @@ function validate(values) {
     const errors = {};
     
     _.each(authFields.signup, ({ name, message }) => {
-        if (!values[name] || values[name].length > 50) {
+        if (!values[name] || values[name].length > 50 || values[name].length < 4) {
+            errors[name] = message;
+        }
+        if(values[name] && name === "password" && values[name].length < 8){
             errors[name] = message;
         }
         if(name === "email" && values.email !== ''){
@@ -78,7 +117,7 @@ function validate(values) {
 }
 
 function mapStateToProps({ auth }) {
-        return { auth };
+    return { auth };
 }
 
 SignupForm = reduxForm({

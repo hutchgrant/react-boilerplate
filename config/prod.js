@@ -3,6 +3,7 @@ module.exports = {
     cookieKey: process.env.COOKIE_KEY,
     sessionKey: process.env.SESSION_KEY,
     tokenSecret: process.env.TOKEN_SECRET,
+    googleRecaptchaSecret: process.env.GOOGLE_RECAPTCHA_SECRET,
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
     facebookClientId: process.env.FACEBOOK_CLIENT_ID,

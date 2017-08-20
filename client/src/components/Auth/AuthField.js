@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default ({ input, type, label, meta: { error, touched, invalid } }) => {
-    
+export default ({ input, type, label, meta: { error, touched, invalid } }) => {    
     if(type === 'checkbox'){
         return (
             <div className="agreement">

@@ -2,9 +2,9 @@
 
 React Boilerplate with Authentication
 
-<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_home.png"><img src="./screenshots/screen_home.png" width="300px"></a>
-<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_login.png"><img src="./screenshots/screen_login.png" width="300px"></a>
-<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_register.png"><img src="./screenshots/screen_register.png" width="300px"></a>
+<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_home.png"><img src="./screenshots/screen_home.png" width="280px"></a>
+<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_login.png"><img src="./screenshots/screen_login.png" width="280px"></a>
+<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_register.png"><img src="./screenshots/screen_register.png" width="280px"></a>
 
 ## Setup
 
@@ -14,11 +14,18 @@ If you want to use social media signin, you'll need API credentials from [Google
 
 Note: With Twitter's API, you need to ensure your application has permissions set to request email addresses
 
+You'll also need to sign up for [Google Recaptcha](http://www.google.com/recaptcha/admin) to get API keys.
+
 ```
 git clone https://github.com/hutchgrant/react-boilerplate.git
 cd ./react-boilerplate
-npm install
-npm install --prefix client
+npm install && npm install --prefix client
+```
+
+Add your Google Recaptcha site key to ./client/.env
+
+```
+REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY=YourGoogleSiteKey
 ```
 
 ### Development
@@ -30,6 +37,7 @@ mongoURI: '',
 cookieKey: '',
 sessionKey: '',
 tokenSecret: '',
+googleRecaptchaSecret: '',
 googleClientId: '',
 googleClientSecret: '',
 facebookClientId: '',
@@ -54,6 +62,7 @@ MONGO_URI=''
 COOKIE_KEY=''
 SESSION_KEY=''
 TOKEN_SECRET=''
+GOOGLE_RECAPTCHA_SECRET='',
 GOOGLE_CLIENT_ID=''
 GOOGLE_CLIENT_SECRET=''
 FACEBOOK_CLIENT_ID=''

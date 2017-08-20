@@ -1,8 +1,11 @@
 import axios from 'axios';
-import { FETCH_USER, LOGOUT_USER } from './types';
+import { FETCH_USER, LOGOUT_USER, INIT_FORM } from './types';
+
+export const initForm = () => dispatch => {
+    dispatch({ type: INIT_FORM, payload: {error: null}});
+};
 
 export const createUser = (values, history) => async dispatch => {
-    const res = await axios.post('/auth/signup', values);
     try {
         const res = await axios({
             url: '/auth/signup',        
@@ -20,12 +23,11 @@ export const createUser = (values, history) => async dispatch => {
         });
         dispatch({ type: FETCH_USER, payload: res.data });        
         if(res.data.error === null){
-            history.push('/dashboard');
+           history.push('/dashboard');
         }       
     } catch(err) {
         console.log(err);
     }
-    dispatch({ type: FETCH_USER, payload: res.data });
 };
 
 export const loginUser = (values, history) => async dispatch => {

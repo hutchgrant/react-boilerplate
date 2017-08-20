@@ -9,6 +9,10 @@ import * as actions from '../../actions';
 
 class LoginForm extends Component {
 
+    componentDidMount() {
+        this.props.initForm();
+    }
+
     renderFields() {
         return _.map(authFields.login, ({label, name, type}) => {
             return <Field key={name} component={AuthField} type={type} label={label} name={name} placeholder={label}/>

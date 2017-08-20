@@ -157,5 +157,16 @@
             margin-top: 4px;
             margin-left: -20px;
             line-height: normal;
+
         }
+
+}
+
+@-moz-document url-prefix() {
+    .agreement > label > input{
+        margin-top: 0px;        
+    }
+    #remember > label > input {
+        margin-top:0px;
+    }
 }

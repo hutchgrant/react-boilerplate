@@ -3,6 +3,7 @@ module.exports = {
     cookieKey: '',
     sessionKey: '',
     tokenSecret: '',
+    googleRecaptchaSecret: '',
     googleClientId: '',
     googleClientSecret: '',
     facebookClientId: '',
