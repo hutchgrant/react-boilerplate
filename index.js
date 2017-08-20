@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const session = require('express-session');
+const helmet = require('helmet');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const validator = require('express-validator'); 
@@ -16,8 +17,22 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(validator());
+app.use(
+    cookieSession({
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        keys: [keys.cookieKey]
+    })
+);
+app.use(session({
+    secret: keys.sessionKey,
+    resave: false,
+    saveUninitialized: true
+  }))
+app.use(flash());
+app.use(helmet());
 app.use(validator({
-    errorFormatter: function(param, msg, value) {
+     function(param, msg, value) {
         var namespace = param.split('.')
         , root    = namespace.shift()
         , formParam = root;
@@ -32,18 +47,6 @@ app.use(validator({
       };
     }
   }));
-app.use(
-    cookieSession({
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        keys: [keys.cookieKey]
-    })
-);
-app.use(session({
-    secret: keys.sessionKey,
-    resave: false,
-    saveUninitialized: true
-  }))
-app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 

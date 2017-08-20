@@ -6,8 +6,16 @@ import { connect } from 'react-redux';
 import AuthField from './AuthField';
 import authFields from './authFields';
 import * as actions from '../../actions';
+import ReCAPTCHA from 'react-google-recaptcha';
+
+let captcha;
 
 class LoginForm extends Component {
+
+    constructor() {
+        super();
+        this.state = {values: null, attempts:0};
+    }
 
     componentDidMount() {
         this.props.initForm();
@@ -29,6 +37,50 @@ class LoginForm extends Component {
         }
     }
 
+    onSubmit(values) {
+        if(this.props.auth.error){
+            this.setState({values, attempts: this.props.auth.error.attempts})
+            if(this.state.values){
+                if(this.state.values.captcha){
+                    values.captcha = this.state.values.captcha
+                    this.props.loginUser(values, this.props.history);       
+                }
+                if(this.props.auth.error.attempts > this.state.attempts && this.props.auth.error.attempts >= 5){
+                    captcha.reset();
+                    this.setState({ values, captcha: null});
+                }
+                if(this.props.auth.error.attempts < 5){
+                    this.props.loginUser(this.state.values, this.props.history); 
+                }
+            }
+        }else{        
+            this.setState({values, attempts: this.state.attempts})
+            this.props.loginUser(values, this.props.history);
+        }
+    }
+    onChange(value) {
+        if(value !== null){
+            this.setState({values: {...this.state.values, captcha: value}});
+        }
+    }
+
+    renderCaptcha() {
+        if(this.props.auth.error){
+            if(this.props.auth.error.attempts >= 5) {
+                return (
+                    <div>
+                        <ReCAPTCHA
+                            ref={(el) => { captcha = el; }}
+                            sitekey={process.env.REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY}
+                            size="normal"
+                            onChange={this.onChange.bind(this)}
+                        />
+                    </div>
+                );
+            }
+        }
+    }
+
     render() {
         return (
             <div  className="login">
@@ -41,7 +93,7 @@ class LoginForm extends Component {
                     <hr />
                     <p id="profile-name" className="profile-name-card">Sign In</p>
                     {this.renderError()}
-                    <form className="form-signin" onSubmit={this.props.handleSubmit(value => this.props.loginUser(value, this.props.history))}>
+                    <form className="form-signin" onSubmit={this.props.handleSubmit(value => this.onSubmit(value))}>
                         <span id="reauth-email" className="reauth-email"></span>
                         {this.renderFields()}
                         <div id="remember" className="checkbox">
@@ -49,6 +101,7 @@ class LoginForm extends Component {
                                 <input type="checkbox" value="remember-me" /> Remember me
                             </label>
                         </div>
+                        {this.renderCaptcha()}
                         <button className="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
                     </form>
                     <div className="profile-footer">

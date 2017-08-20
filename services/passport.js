@@ -52,7 +52,7 @@ passport.use('local.signup',new LocalStrategy({
         req.getValidationResult().then(async (errors) => {
             if(!errors.isEmpty()){
                 var messages = [];
-                errors.forEach(function(error){
+                errors.array().forEach(function(error){
                     messages.push(error.msg);
                 });
                 return done(null, false, req.flash('error', messages))
@@ -120,7 +120,7 @@ passport.use('local.signin', new LocalStrategy({
         req.getValidationResult().then(async (errors) => {
             if(!errors.isEmpty()){
                 var messages = [];
-                errors.forEach(function(error){
+                errors.array().forEach(function(error){
                     messages.push(error.msg);
                 });
                 return done(null, false, req.flash('error', messages))
@@ -129,9 +129,19 @@ passport.use('local.signin', new LocalStrategy({
                 const user = await User.findOne({username: username });
                 if (!user || !user.validPassword(password)) {
                     return done(null, false, req.flash('error', ['Login failed. Check your username/password']));
+
                 }
-                return done(null, user);
-            } catch(err) {
+                                    
+                if(req.session.signInAttempts >= 5){
+                    recaptcha.validateRecaptcha(req.body.captcha, req.connection.remoteAddress).then(async () => {
+                        return done(null, user); 
+                    }).catch((e) => {
+                        return done(null, false, req.flash('error', [e.error]))
+                    });
+                }else{
+                    return done(null, user); 
+                }
+            } catch(err) {                
                 return done(err);
             }
         });

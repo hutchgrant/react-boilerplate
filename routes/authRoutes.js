@@ -31,17 +31,21 @@ module.exports = app => {
         passport.authenticate('local.signin', {
             failureRedirect: '/auth/login_error'
         }), jwt.generateToken, (req, res) => {
+            req.session.signInAttempts = 0;
             res.status(200).json({
                 username: req.user.username,
-                token: req.token
+                token: req.token,
+                error: {}
             });
         }
     );
 
     app.get('/auth/login_error', (req, res) => {
+        req.session.signInAttempts += 1;
         res.json({
             error: {
-                message: req.flash('error')
+                message: req.flash('error'),
+                attempts: req.session.signInAttempts
             }
         });
     });
