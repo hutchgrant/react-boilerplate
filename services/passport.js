@@ -25,63 +25,76 @@ passport.use('local.signup',new LocalStrategy({
     },
     async (req, username, password, done) => {
         // validate fields
-        req.checkBody('username', 'Invalid username').notEmpty().isLength({min:4, max: 50});
+        req.checkBody({'username': {
+            notEmpty: true,
+            matches: {
+              options: [/^[a-z0-9_-]{4,20}$/i]
+            },
+            isLength: {
+                options: [{ min: 4, max: 20 }],
+                errorMessage: 'Username Must be between 4 and 20 characters'
+              },
+            errorMessage: 'You must enter a valid username with 4-20 characters, no special characters allowed',
+        }});
         req.checkBody('email', 'Invalid email').notEmpty().isEmail();        
         req.checkBody({'password': {
             notEmpty: true,
             matches: {
-              options: [req.body.confirm_password, 'i']
+              options: [/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,]).{6,20}$/, 
+                        req.body.confirm_password ]
             },
             isLength: {
-                options: [{ min: 8, max: 50 }],
-                errorMessage: 'Password Must be between 8 and 50 characters'
+                options: [{ min: 6, max: 20 }],
+                errorMessage: 'Password Must be between 6 and 20 characters'
               },
-            errorMessage: 'Passwords must match' 
+            errorMessage: 'You must enter a valid password with between 6 and 20 characters, at least 1 capital, 1 number, and 1 special character',
         }});   
-        let errors = req.validationErrors();
-        if (errors){
-            var messages = [];
-            errors.forEach(function(error){
-                messages.push(error.msg);
-            });
-            return done(null, false, req.flash('error', messages))
-        }
-        try { 
-            // validate against database
-            let errors = [];
-            let user = await User.findOne({username: username});
-            if (user) {
-                errors.push({param: 'username', msg:'Username already taken, choose a different username'});
-            }
-            user = await User.findOne({email: req.body.email});            
-            if(user){
-                errors.push({param: 'email', msg:'Email already in use'});
-            }
-            if (errors.length > 0){
+        req.getValidationResult().then(async (errors) => {
+            if(!errors.isEmpty()){
                 var messages = [];
                 errors.forEach(function(error){
                     messages.push(error.msg);
                 });
                 return done(null, false, req.flash('error', messages))
             }
+        
+            try { 
+                // validate against database
+                let errors = [];
+                let user = await User.findOne({username: username});
+                if (user) {
+                    errors.push({param: 'username', msg:'Username already taken, choose a different username'});
+                }
+                user = await User.findOne({email: req.body.email});            
+                if(user){
+                    errors.push({param: 'email', msg:'Email already in use'});
+                }
+                if (errors.length > 0){
+                    var messages = [];
+                    errors.forEach(function(error){
+                        messages.push(error.msg);
+                    });
+                    return done(null, false, req.flash('error', messages))
+                }
 
-            recaptcha.validateRecaptcha(req.body.captcha, req.connection.remoteAddress).then(async () => {
-                // add new user
-                const admin = await User.findOne({admin: true})
-                let newUser = new User({ 
-                    username: username,
-                    email: req.body.email,
-                    admin: !admin
+                recaptcha.validateRecaptcha(req.body.captcha, req.connection.remoteAddress).then(async () => {
+                    // add new user
+                    const admin = await User.findOne({admin: true})
+                    let newUser = new User({ 
+                        username: username,
+                        email: req.body.email,
+                        admin: !admin
+                    });
+                    newUser.password = newUser.encryptPassword(password);
+                    newUser = await newUser.save();
+                    return done(null, newUser);
+                }).catch((e) => {
+                    return done(null, false, req.flash('error', [e.error]))
                 });
-                newUser.password = newUser.encryptPassword(password);
-                newUser = await newUser.save();
-                return done(null, newUser);
-            }).catch((e) => {
-                return done(null, false, req.flash('error', [e.error]))
-            });
-        } catch(err) {
-            return done(err);
-        }
+            } catch(err) {
+                return done(err);
+            }
+        });
     }
   )
 );
@@ -92,25 +105,36 @@ passport.use('local.signin', new LocalStrategy({
         passwordField: 'password',
         passReqToCallback: true
     },async (req, username, password, done) => {
-        req.checkBody('username', 'Invalid username').notEmpty().isLength({min:4, max: 50});
-        req.checkBody('password', 'Invalid password').notEmpty().isLength({min:8, max:50});
-        var errors = req.validationErrors();
-        if (errors){
-            var messages = [];
-            errors.forEach(function(error){
-                messages.push(error.msg);
-            });
-            return done(null, false, req.flash('error', messages))
-        }
-        try {
-            const user = await User.findOne({username: username });
-            if (!user || !user.validPassword(password)) {
-                return done(null, false, req.flash('error', ['Login failed. Check your username/password']));
+        req.checkBody('username', 'Invalid username').notEmpty().isLength({min:4, max:20});
+        req.checkBody({'password': {
+            notEmpty: true,
+            matches: {
+              options: [/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,]).{6,20}$/]
+            },
+            isLength: {
+                options: [{ min: 6, max: 20 }],
+                errorMessage: 'Password Must be between 6 and 20 characters'
+              },
+            errorMessage: 'You must enter a valid password with between 6 and 20 characters, at least 1 capital, 1 number, and 1 special character',
+        }});
+        req.getValidationResult().then(async (errors) => {
+            if(!errors.isEmpty()){
+                var messages = [];
+                errors.forEach(function(error){
+                    messages.push(error.msg);
+                });
+                return done(null, false, req.flash('error', messages))
             }
-            return done(null, user);
-        } catch(err) {
-            return done(err);
-        }
+            try {
+                const user = await User.findOne({username: username });
+                if (!user || !user.validPassword(password)) {
+                    return done(null, false, req.flash('error', ['Login failed. Check your username/password']));
+                }
+                return done(null, user);
+            } catch(err) {
+                return done(err);
+            }
+        });
     })
 );
 

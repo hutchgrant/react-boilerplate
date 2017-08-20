@@ -88,25 +88,15 @@ class SignupForm extends Component {
 
 };
 
-function validateEmails(email, message) {
-    const re = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if(re.test(email) === false){
-        return message;
-    }    
-}
-
 function validate(values) {
     const errors = {};
     
-    _.each(authFields.signup, ({ name, message }) => {
+    _.each(authFields.signup, ({ name, message, regex }) => {
         if (!values[name] || values[name].length > 50 || values[name].length < 4) {
             errors[name] = message;
         }
-        if(values[name] && name === "password" && values[name].length < 8){
+        if(values[name] && regex.test(values[name]) === false) {
             errors[name] = message;
-        }
-        if(name === "email" && values.email !== ''){
-            errors.email = validateEmails(values.email, message);
         }
         if(name === "confirm_password" && values.confirm_password !== values.password){
             errors.confirm_password = message;
