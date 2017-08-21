@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const validator = require('express-validator'); 
+const requestIp = require('request-ip');
 const flash = require('express-flash');
 const keys = require('./config/keys');
 require('./models/User');
@@ -31,22 +32,7 @@ app.use(session({
   }))
 app.use(flash());
 app.use(helmet());
-app.use(validator({
-     function(param, msg, value) {
-        var namespace = param.split('.')
-        , root    = namespace.shift()
-        , formParam = root;
-  
-      while(namespace.length) {
-        formParam += '[' + namespace.shift() + ']';
-      }
-      return {
-        param : formParam,
-        msg   : msg,
-        value : value
-      };
-    }
-  }));
+app.use(requestIp.mw());
 app.use(passport.initialize());
 app.use(passport.session());
 

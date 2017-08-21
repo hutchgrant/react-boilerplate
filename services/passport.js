@@ -24,31 +24,8 @@ passport.use('local.signup',new LocalStrategy({
         passReqToCallback: true
     },
     async (req, username, password, done) => {
-        // validate fields
-        req.checkBody({'username': {
-            notEmpty: true,
-            matches: {
-              options: [/^[a-z0-9_-]{4,20}$/i]
-            },
-            isLength: {
-                options: [{ min: 4, max: 20 }],
-                errorMessage: 'Username Must be between 4 and 20 characters'
-              },
-            errorMessage: 'You must enter a valid username with 4-20 characters, no special characters allowed',
-        }});
         req.checkBody('email', 'Invalid email').notEmpty().isEmail();        
-        req.checkBody({'password': {
-            notEmpty: true,
-            matches: {
-              options: [/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,]).{6,20}$/, 
-                        req.body.confirm_password ]
-            },
-            isLength: {
-                options: [{ min: 6, max: 20 }],
-                errorMessage: 'Password Must be between 6 and 20 characters'
-              },
-            errorMessage: 'You must enter a valid password with between 6 and 20 characters, at least 1 capital, 1 number, and 1 special character',
-        }});   
+
         req.getValidationResult().then(async (errors) => {
             if(!errors.isEmpty()){
                 var messages = [];
@@ -83,9 +60,12 @@ passport.use('local.signup',new LocalStrategy({
                     let newUser = new User({ 
                         username: username,
                         email: req.body.email,
-                        admin: !admin
+                        admin: !admin,
+                        login: req.ipAgent,
+                        registered: req.ipAgent
                     });
                     newUser.password = newUser.encryptPassword(password);
+
                     newUser = await newUser.save();
                     return done(null, newUser);
                 }).catch((e) => {
@@ -105,18 +85,6 @@ passport.use('local.signin', new LocalStrategy({
         passwordField: 'password',
         passReqToCallback: true
     },async (req, username, password, done) => {
-        req.checkBody('username', 'Invalid username').notEmpty().isLength({min:4, max:20});
-        req.checkBody({'password': {
-            notEmpty: true,
-            matches: {
-              options: [/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,]).{6,20}$/]
-            },
-            isLength: {
-                options: [{ min: 6, max: 20 }],
-                errorMessage: 'Password Must be between 6 and 20 characters'
-              },
-            errorMessage: 'You must enter a valid password with between 6 and 20 characters, at least 1 capital, 1 number, and 1 special character',
-        }});
         req.getValidationResult().then(async (errors) => {
             if(!errors.isEmpty()){
                 var messages = [];
@@ -126,21 +94,23 @@ passport.use('local.signin', new LocalStrategy({
                 return done(null, false, req.flash('error', messages))
             }
             try {
-                const user = await User.findOne({username: username });
+                let user = await User.findOne({username: username });
                 if (!user || !user.validPassword(password)) {
                     return done(null, false, req.flash('error', ['Login failed. Check your username/password']));
-
                 }
                                     
                 if(req.session.signInAttempts >= 5){
                     recaptcha.validateRecaptcha(req.body.captcha, req.connection.remoteAddress).then(async () => {
+                        user.login = req.ipAgent;
+                        user = await user.save();    
                         return done(null, user); 
                     }).catch((e) => {
                         return done(null, false, req.flash('error', [e.error]))
                     });
-                }else{
-                    return done(null, user); 
                 }
+                user.login = req.ipAgent;
+                user = await user.save();                
+                return done(null, user); 
             } catch(err) {                
                 return done(err);
             }
@@ -154,12 +124,15 @@ passport.use(
         clientID: keys.googleClientId,
         clientSecret: keys.googleClientSecret,
         callbackURL: '/auth/google/callback',
-        proxy: true
+        proxy: true,
+        passReqToCallback: true
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (req, accessToken, refreshToken, profile, done) => {
         try{
-            const existingUser = await User.findOne({ googleId: profile.id });
+            let existingUser = await User.findOne({ googleId: profile.id });
             if (existingUser) {
+                existingUser.login = req.ipAgent;
+                existingUser = await existingUser.save();  
                 return done(null, existingUser);
             }
             const admin = await User.findOne({admin: true});
@@ -170,11 +143,13 @@ passport.use(
                 givenName: profile.name.givenName,
                 familyName: profile.name.familyName,
                 email: profile.emails[0].value,
-                admin: !admin
+                admin: !admin,
+                login: req.ipAgent,
+                registered: req.ipAgent
             }).save();
             done(null, user);
         }catch(e){
-            return done(err);
+            return done(e);
         }
     })
 );
@@ -183,12 +158,15 @@ passport.use(new FacebookStrategy({
     clientID: keys.facebookClientId,
     clientSecret: keys.facebookClientSecret,
     callbackURL: `${keys.redirectDomain}/auth/facebook/callback`,
-    profileFields: ['id', 'displayName', 'photos', 'email']    
+    profileFields: ['id', 'displayName', 'photos', 'email'],
+    passReqToCallback: true    
   },
-  async (accessToken, refreshToken, profile, done) => {
+  async (req, accessToken, refreshToken, profile, done) => {
     try{
-        const existingUser = await User.findOne({ facebookId: profile.id });
+        let existingUser = await User.findOne({ facebookId: profile.id });
         if (existingUser) {
+            existingUser.login = req.ipAgent;
+            existingUser = await existingUser.save();  
             return done(null, existingUser);
         }
         const admin = await User.findOne({admin: true});
@@ -196,12 +174,14 @@ passport.use(new FacebookStrategy({
             facebookId: profile.id, 
             username: profile.displayName,
             email: profile.emails[0].value,
-            admin: !admin
+            admin: !admin,
+            login: req.ipAgent,
+            registered: req.ipAgent
         }).save(); 
 
         done(null, user);  
     }catch(e){
-        return done(err);
+        return done(e);
     }
   }
 ));
@@ -210,12 +190,15 @@ passport.use(new TwitterStrategy({
     consumerKey: keys.twitterConsumerId,
     consumerSecret: keys.twitterConsumerSecret,
     callbackURL: `${keys.redirectDomain}/auth/twitter/callback`,
-    userProfileURL: "https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true"
+    userProfileURL: "https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true",
+    passReqToCallback: true
 },
-  async (token, tokenSecret, profile, done) => {
+  async (req, token, tokenSecret, profile, done) => {
     try{
-        const existingUser = await User.findOne({ twitterId: profile.id });
+        let existingUser = await User.findOne({ twitterId: profile.id });
         if (existingUser) {
+            existingUser.login = req.ipAgent;
+            existingUser = await existingUser.save();  
             return done(null, existingUser);
         }
         const admin = await User.findOne({admin: true});
@@ -224,12 +207,14 @@ passport.use(new TwitterStrategy({
             twitterId: profile.id, 
             username: profile.displayName,
             email: profile.emails[0].value,
-            admin: !admin
+            admin: !admin,
+            login: req.ipAgent,
+            registered: req.ipAgent
         }).save(); 
 
         done(null, user);   
     }catch(e){
-        return done(err);
+        return done(e);
     }
   }
 ));

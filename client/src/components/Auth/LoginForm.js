@@ -119,7 +119,7 @@ function validate(values) {
     const errors = {};
 
     _.each(authFields.login, ({ name, message }) => {
-        if (!values[name] || values[name].length > 50) {
+        if (!values[name] || values[name].length > 20) {
             errors[name] = message;
         }
     });

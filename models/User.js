@@ -2,6 +2,15 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
 
+
+var ipAgentSchema = new Schema({
+	date: {type: Date, required: true},
+	ipaddress: {type: String, required: true},
+	os: {type: String, required: true},
+	device: {type: String, required: true},
+	browser: {type: String, required: true}
+});
+
 var userSchema = new Schema({
 	username: {type: String, required: true},
 	password: {type: String, required: false},
@@ -11,8 +20,11 @@ var userSchema = new Schema({
 	familyName: {type: String},
 	googleId: {type: String},
 	twitterId: {type: String},
-	facebookId: {type: String}
+	facebookId: {type: String},
+	login: ipAgentSchema,
+	registered: ipAgentSchema,
 });
+
 
 userSchema.methods.encryptPassword = function(password) {
 	return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);

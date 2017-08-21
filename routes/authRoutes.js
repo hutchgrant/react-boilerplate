@@ -1,6 +1,7 @@
 const passport = require('passport');
 const keys = require('../config/keys');
 const jwt = require('../middleware/jwt');
+const validate = require('../middleware/validate');
 const expressJwt = require('express-jwt');  
 const authenticate = expressJwt({secret : keys.tokenSecret});
 const mongoose = require('mongoose');
@@ -8,7 +9,10 @@ const crypto = require('crypto');
 const User = mongoose.model('User');
 
 module.exports = app => {
+    
     app.post('/auth/signup',
+        validate.checkUserAndPass,
+        validate.getIPAgent,
         passport.authenticate('local.signup', {
             failureRedirect: '/auth/signup_error'
         }), jwt.generateToken, (req, res) => {
@@ -28,6 +32,8 @@ module.exports = app => {
     });
     
     app.post('/auth/login',
+        validate.checkUserAndPass,
+        validate.getIPAgent,
         passport.authenticate('local.signin', {
             failureRedirect: '/auth/login_error'
         }), jwt.generateToken, (req, res) => {
@@ -74,7 +80,7 @@ module.exports = app => {
     });
 
     app.get(
-        '/auth/google',
+        '/auth/google',       
         passport.authenticate('google', {
           scope: ['profile', 'email']
         })
@@ -82,6 +88,7 @@ module.exports = app => {
     
     app.get(
         '/auth/google/callback', 
+        validate.getIPAgent, 
         passport.authenticate('google'),
         (req, res) => {
             req.session.genTokenHash = crypto.randomBytes(64).toString('hex');
@@ -89,10 +96,17 @@ module.exports = app => {
         }
     );
 
-    app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+    app.get(
+        '/auth/facebook',        
+        passport.authenticate('facebook', { 
+            scope: ['email'] 
+        }));
   
-    app.get('/auth/facebook/callback',
-        passport.authenticate('facebook', { failureRedirect: '/login' }),
+    app.get('/auth/facebook/callback', 
+        validate.getIPAgent,
+        passport.authenticate('facebook', { 
+            failureRedirect: '/login' 
+        }),
     (req, res) =>{
         req.session.genTokenHash = crypto.randomBytes(64).toString('hex');        
         res.redirect(`/dashboard?auth=${req.session.genTokenHash}`);
@@ -101,8 +115,12 @@ module.exports = app => {
     app.get('/auth/twitter',
     passport.authenticate('twitter'));
   
-  app.get('/auth/twitter/callback', 
-    passport.authenticate('twitter', { failureRedirect: '/login' }),
+  app.get(
+        '/auth/twitter/callback',
+        validate.getIPAgent,
+        passport.authenticate('twitter', { 
+            failureRedirect: '/login' 
+        }),
     (req, res) => {
         req.session.genTokenHash = crypto.randomBytes(64).toString('hex');        
         res.redirect(`/dashboard?auth=${req.session.genTokenHash}`);
