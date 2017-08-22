@@ -6,11 +6,13 @@ const expressJwt = require('express-jwt');
 const authenticate = expressJwt({secret : keys.tokenSecret});
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const rateLimit = require('../middleware/limiter');
 const User = mongoose.model('User');
 
 module.exports = app => {
     
     app.post('/auth/signup',
+        rateLimit('signup'),
         validate.checkUserAndPass,
         validate.getIPAgent,
         passport.authenticate('local.signup', {
@@ -24,6 +26,7 @@ module.exports = app => {
     );
 
     app.get('/auth/signup_error', (req, res) => {
+        rateLimit('signup'),
         res.json({
             error: {
                 message: req.flash('error')
@@ -32,6 +35,7 @@ module.exports = app => {
     });
     
     app.post('/auth/login',
+        rateLimit('login'),
         validate.checkUserAndPass,
         validate.getIPAgent,
         passport.authenticate('local.signin', {
@@ -46,7 +50,8 @@ module.exports = app => {
         }
     );
 
-    app.get('/auth/login_error', (req, res) => {
+    app.get('/auth/login_error', 
+        (req, res) => {
         req.session.signInAttempts += 1;
         res.json({
             error: {
