@@ -45,6 +45,7 @@ module.exports = app => {
             res.status(200).json({
                 username: req.user.username,
                 token: req.token,
+                admin: req.user.admin,
                 error: {}
             });
         }
@@ -70,7 +71,8 @@ module.exports = app => {
         try {
             const user = await User.findOne({_id: req.user.id });
             res.status(200).json({
-                username:user.username
+                username: user.username,
+                admin: user.admin
             });
         } catch(err){
             res.status(500);
@@ -80,6 +82,7 @@ module.exports = app => {
     app.get('/auth/gentoken/:token', jwt.socialGenerateToken, (req, res,next) => {
         res.status(200).json({
             username: req.user.username,
+            admin: req.user.admin,
             token: req.token
         });
     });

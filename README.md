@@ -5,6 +5,7 @@ React Boilerplate with Authentication
 <a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_home.png"><img src="./screenshots/screen_home.png" width="280px"></a>
 <a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_login.png"><img src="./screenshots/screen_login.png" width="280px"></a>
 <a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_register.png"><img src="./screenshots/screen_register.png" width="280px"></a>
+<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_admin.png"><img src="./screenshots/screen_admin.png" width="280px"></a>
 
 ## Setup
 

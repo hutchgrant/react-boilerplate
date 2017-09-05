@@ -2,18 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import * as actions from '../actions/index';
+import * as actions from '../../actions/index';
 
-class Header extends Component {
+class AdminHeader extends Component {
 
     logoutUser() {
         this.props.logoutUser(this.props.history);
-    }
-
-    renderAdminNav() {
-        if(this.props.auth.admin) {
-            return <li><Link to="/admin">Admin</Link></li>
-        }
     }
 
     renderContent() {
@@ -23,14 +17,14 @@ class Header extends Component {
                     return <li><a href="/login">Login</a></li>;
                 default:
                     return <li key="2">
-                            <a className="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <a className="dropdown-toggle" id="adminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <i className="fa fa-user-o" aria-hidden="true"> </i>
-                                {this.props.auth.username}
+                                <span className="adminUserTag">{this.props.auth.username}</span>
                                 <span className="caret"></span>
                             </a>
-                            <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <ul className="dropdown-menu" aria-labelledby="adminDropdown">
                                 <li><Link to="/dashboard">Dashboard</Link></li>
-                                {this.renderAdminNav()}
+                                <li><Link to="/admin">Admin</Link></li>
                                 <li role="separator" className="divider"></li>
                                 <li><a className="cursorPointer" onClick={this.logoutUser.bind(this)} >Logout</a></li>
                             </ul>
@@ -42,12 +36,16 @@ class Header extends Component {
 
     renderFullPage() {
         const path = this.props.location.pathname;
-        if(path !== '/login' && path !== '/signup' && path.substring(0,6) !== '/admin' ){
+        if(path.substring(0, 6) === '/admin'){
             return (
-                <nav className="navbar navbar-default navbar-static-top">
-                    <div className="container">
+                <nav className="navbar navbar-admin navbar-static-top">
+                    <div className="container-fluid">
                         <div className="navbar-header">
-                            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <button type="button" 
+                            className="navbar-admin-toggle collapsed" 
+                            data-toggle="collapse" 
+                            data-target="#bs-sidebar-navbar-collapse-1" 
+                            aria-expanded="false">
                             <span className="sr-only">Toggle navigation</span>
                             <span className="icon-bar"></span>
                             <span className="icon-bar"></span>
@@ -57,16 +55,12 @@ class Header extends Component {
                                 to={this.props.auth.token ? '/dashboard'  : '/'} 
                                 className="navbar-brand"
                             >
-                                React Boilerplate
+                                Boilerplate Admin
                             </Link>              
                         </div>
-                        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul className="nav navbar-nav">   
-                            </ul>
                             <ul className="nav navbar-nav navbar-right">
                                 {this.renderContent()}
                             </ul>
-                        </div>
                     </div>
                 </nav>
             );
@@ -86,5 +80,5 @@ function mapStateToProps({ auth }) {
     return { auth };
 }
 
-Header = connect(mapStateToProps, actions)(Header);
-export default withRouter(Header);
+AdminHeader = connect(mapStateToProps, actions)(AdminHeader);
+export default withRouter(AdminHeader);
