@@ -26,6 +26,11 @@
         radial-gradient(rgba(255, 255, 255, 0.1) 5%, transparent 5%) 8px 9px;
         background-size: 7px 7px;
     }
+    @media(max-width: $screen-sm) {
+        height: 100%;
+        position: absolute;
+        width: 100%;
+    }
 }
 
 .adminContainer{

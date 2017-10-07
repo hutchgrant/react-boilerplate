@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import $ from 'jquery';
 
 class AdminHeader extends Component {
+    
+    componentDidMount() {
+        $('.nav a').on('click', function(){
+            $('.navbar-collapse').removeClass('in');
+        });
+    }
 
     logoutUser() {
         this.props.logoutUser(this.props.history);
