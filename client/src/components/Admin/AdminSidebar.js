@@ -1,29 +1,24 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import * as actions from '../../actions/index';
-import $ from 'jquery';
+import MyRoutes from './adminRoutes';
 
-import MyRoutes from '../routes';
+import $ from 'jquery';
+const ResizeSensor = require('css-element-queries/src/ResizeSensor.js');
+const EQ = require('css-element-queries/src/ElementQueries.js');
+
+EQ.init();
 
 class AdminSidebar extends Component {
-    constructor(props) {
-        super(props);
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-    }
     
     componentDidMount() {
-        this.updateWindowDimensions();
-        window.addEventListener('resize', this.updateWindowDimensions);
+        this.updateWindow();
+        new ResizeSensor($('.main'), () =>{ 
+            this.updateWindow();
+        });
     }
-    
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
-    
-    updateWindowDimensions() {
+
+    updateWindow() {
         let height3 = $( window ).height()-51;
         let height1 = $('.nav').height();
         let height2 = $('.main').height();
@@ -32,13 +27,10 @@ class AdminSidebar extends Component {
         
         if(height2 > height3){
             $('.sidebar').height(Math.max(height1,height3,height2)+10);
-		}else{
+        }else{
             $('.sidebar').height(Math.max(height1,height3,height2));
         }
         
-        if(width < 768){
-            $('.sidebar').removeAttr('style');
-        }
         if(width < 768){
             $('.sidebar').removeAttr('style');
         }
@@ -86,10 +78,4 @@ class AdminSidebar extends Component {
         );
     }
 }
-
-function mapStateToProps({ auth }) {
-    return { auth };
-}
-
-AdminSidebar = connect(mapStateToProps, actions)(AdminSidebar);
-export default withRouter(AdminSidebar);
+export default AdminSidebar;

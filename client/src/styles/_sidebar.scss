@@ -21,8 +21,6 @@
 		}
 	}
 
-
-
 	nav.sidebar, .main{
 		-webkit-transition: margin 200ms ease-out;
 	    -moz-transition: margin 200ms ease-out;
@@ -35,8 +33,8 @@
 		margin-left: 50px;
 		margin-right:0; 
 		width: calc(100% - 50px); /*keeps 100% minus nav size*/
-		
 		padding: 10px 10px 0 10px;
+		position:absolute;
 			/*small/medium side display*/
 		@media (min-width: $screen-xs) {
 			/*Allow main to be next to Nav*/

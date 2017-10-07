@@ -1,18 +1,19 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Loadable from 'react-loadable';
-import * as actions from '../actions';
+import * as actions from '../actions/auth';
 
 import Loading from './Loading';
 import Header from './Header';
+import Footer from './Footer';
+import Error404 from './Error404';
 import AuthenticatedRoute from './Auth/AuthenticatedRoute';
 import UnauthenticatedRoute from './Auth/UnauthenticatedRoute';
 import MyRoutes from './routes';
 
-
-let AsyncComponent = [];
+ let AsyncComponent = [];
 const AsyncLoginComponent = Loadable({
   loader: () => import('./Auth/LoginForm'),
   loading: Loading
@@ -26,7 +27,6 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       isLoadingUserToken: true,
     };
@@ -61,11 +61,18 @@ class App extends Component {
   }
 
   renderClientRoutes() {
-    return _.map(MyRoutes.routes, ({path, component, authenticated}, index) => {
+    return _.map(MyRoutes.routes, ({path, component, authenticated, everyone}, index) => {
       AsyncComponent[index] = Loadable({
         loader: () => import(`${component}`),
         loading: Loading
       });
+      if(everyone){
+        return <Route 
+        key={index}
+        exact path={path}
+        component={AsyncComponent[index]} 
+        props={this.props} />        
+      }
       if(!authenticated){
         return <UnauthenticatedRoute 
         key={index}
@@ -83,42 +90,35 @@ class App extends Component {
   }
 
   renderAdminRoutes() {
-    const AsyncAdminHeader = Loadable({
-      loader: () => import('./Admin/AdminHeader'),
-      loading: Loading
-    });
-    const AsyncAdminSidebar = Loadable({
-      loader: () => import('./Admin/AdminSidebar'),
+    let AsyncAdminComponent = Loadable({
+      loader: () => import('./Admin/AdminContainer'),
       loading: Loading
     });
 
-    return _.map(MyRoutes.admin, ({path, component}, index) => {
-      let AsyncAdminComponent = Loadable({
-        loader: () => import(`${component}`),
-        loading: Loading
-      });
-      return <AuthenticatedRoute 
-              key={index}
-              exact path={path}
-              components={{ header: AsyncAdminHeader, sidebar: AsyncAdminSidebar, main: AsyncAdminComponent}} 
-              props={this.props} 
-              admin="true" /> 
-    });
+    return <AuthenticatedRoute 
+            path={'/admin'}
+            component={AsyncAdminComponent} 
+            props={this.props}
+            admin="true"/> 
   }
 
   render() {
     return ! this.state.isLoadingUserToken
       && (
             <BrowserRouter>
+
               <div className="page">
-                <Header />
-                {this.renderAdminRoutes()}
-                <div className="container"> 
+                <Header {...this.props} />
+                <Switch>
+                  {this.renderAdminRoutes()}
                   {this.renderClientRoutes()}
-                  <UnauthenticatedRoute exact path='/login' component={AsyncLoginComponent} props={this.props} />
-                  <UnauthenticatedRoute exact path='/signup' component={AsyncSignupComponent} props={this.props} />
-                </div>  
+                  <UnauthenticatedRoute exact path='/user/login' component={AsyncLoginComponent} props={this.props} />
+                  <UnauthenticatedRoute exact path='/user/signup' component={AsyncSignupComponent} props={this.props} />
+                  <Route component={Error404}/>
+                </Switch>
+                <Footer /> 
               </div>
+
             </BrowserRouter>      
         );
   }

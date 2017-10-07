@@ -1,4 +1,4 @@
-import { FETCH_USER, LOGOUT_USER, INIT_FORM } from '../actions/types';
+import { FETCH_USER, LOGOUT_USER, INIT_FORM } from '../actions/authTypes';
 
 export default function(state = null, {type, payload}) {
     switch (type) {

@@ -100,7 +100,7 @@ module.exports = app => {
         passport.authenticate('google'),
         (req, res) => {
             req.session.genTokenHash = crypto.randomBytes(64).toString('hex');
-            res.redirect(`/dashboard?auth=${req.session.genTokenHash}`);
+            res.redirect(`/user/dashboard?auth=${req.session.genTokenHash}`);
         }
     );
 
@@ -117,7 +117,7 @@ module.exports = app => {
         }),
     (req, res) =>{
         req.session.genTokenHash = crypto.randomBytes(64).toString('hex');        
-        res.redirect(`/dashboard?auth=${req.session.genTokenHash}`);
+        res.redirect(`/user/dashboard?auth=${req.session.genTokenHash}`);
     });
     
     app.get('/auth/twitter',
@@ -131,6 +131,6 @@ module.exports = app => {
         }),
     (req, res) => {
         req.session.genTokenHash = crypto.randomBytes(64).toString('hex');        
-        res.redirect(`/dashboard?auth=${req.session.genTokenHash}`);
+        res.redirect(`/user/dashboard?auth=${req.session.genTokenHash}`);
     });
 };

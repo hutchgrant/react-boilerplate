@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import * as actions from '../actions/index';
 
 class Header extends Component {
 
@@ -12,7 +10,7 @@ class Header extends Component {
 
     renderAdminNav() {
         if(this.props.auth.admin) {
-            return <li><Link to="/admin">Admin</Link></li>
+            return <li><Link to="/admin/dashboard">Admin</Link></li>
         }
     }
 
@@ -20,7 +18,7 @@ class Header extends Component {
         if(this.props.auth !== null){
             switch (this.props.auth.token) {
                 case null:
-                    return <li><a href="/login">Login</a></li>;
+                    return <li><a href="/user/login">Login</a></li>;
                 default:
                     return <li key="2">
                             <a className="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -29,7 +27,7 @@ class Header extends Component {
                                 <span className="caret"></span>
                             </a>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><Link to="/dashboard">Dashboard</Link></li>
+                                <li><Link to="/user/dashboard">Dashboard</Link></li>
                                 {this.renderAdminNav()}
                                 <li role="separator" className="divider"></li>
                                 <li><a className="cursorPointer" onClick={this.logoutUser.bind(this)} >Logout</a></li>
@@ -42,7 +40,7 @@ class Header extends Component {
 
     renderFullPage() {
         const path = this.props.location.pathname;
-        if(path !== '/login' && path !== '/signup' && path.substring(0,6) !== '/admin' ){
+        if(path !== '/user/login' && path !== '/user/signup' && path.substring(0,6) !== '/admin' ){
             return (
                 <nav className="navbar navbar-default navbar-static-top">
                     <div className="container">
@@ -54,7 +52,7 @@ class Header extends Component {
                             <span className="icon-bar"></span>
                             </button>
                             <Link 
-                                to={this.props.auth.token ? '/dashboard'  : '/'} 
+                                to={this.props.auth.token ? '/user/dashboard'  : '/'} 
                                 className="navbar-brand"
                             >
                                 React Boilerplate
@@ -82,9 +80,4 @@ class Header extends Component {
     }
 }
 
-function mapStateToProps({ auth }) {
-    return { auth };
-}
-
-Header = connect(mapStateToProps, actions)(Header);
 export default withRouter(Header);

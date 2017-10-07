@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import * as actions from '../../actions/index';
 
 class AdminHeader extends Component {
 
@@ -23,7 +21,7 @@ class AdminHeader extends Component {
                                 <span className="caret"></span>
                             </a>
                             <ul className="dropdown-menu" aria-labelledby="adminDropdown">
-                                <li><Link to="/dashboard">Dashboard</Link></li>
+                                <li><Link to="/user/dashboard">Dashboard</Link></li>
                                 <li><Link to="/admin">Admin</Link></li>
                                 <li role="separator" className="divider"></li>
                                 <li><a className="cursorPointer" onClick={this.logoutUser.bind(this)} >Logout</a></li>
@@ -52,7 +50,7 @@ class AdminHeader extends Component {
                             <span className="icon-bar"></span>
                             </button>
                             <Link 
-                                to={this.props.auth.token ? '/dashboard'  : '/'} 
+                                to={this.props.auth.token ? '/user/dashboard'  : '/'} 
                                 className="navbar-brand"
                             >
                                 Boilerplate Admin
@@ -76,9 +74,4 @@ class AdminHeader extends Component {
     }
 }
 
-function mapStateToProps({ auth }) {
-    return { auth };
-}
-
-AdminHeader = connect(mapStateToProps, actions)(AdminHeader);
 export default withRouter(AdminHeader);

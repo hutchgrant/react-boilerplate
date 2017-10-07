@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../actions';
+import * as actions from '../../../actions/admin';
 
 class UserList extends Component {
     render() {
@@ -12,8 +12,8 @@ class UserList extends Component {
     }
 };
 
-function mapStateToProps({ auth }) {
-        return { auth };
+function mapStateToProps({ admin }) {
+    return { admin };
 }
 
 export default connect(mapStateToProps, actions)(UserList);

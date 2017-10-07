@@ -1,0 +1,62 @@
+.sortableInput{
+    background-color:transparent;    
+    border:none;
+    border-bottom:1px solid white;
+    color: white;
+    padding-left: 3px;
+    transition: all 600ms cubic-bezier(0.895, 0.03, 0.685, 0.22);
+    &:focus {
+        outline-width: 0;
+        font-size: 20px;
+    }
+    &::-webkit-input-placeholder { /* Chrome */
+        color:white;
+      }
+      &:-ms-input-placeholder { /* IE 10+ */
+        color:white;
+      }
+      &::-moz-placeholder { /* Firefox 19+ */
+        color:white;
+        opacity: 1;
+      }
+      &:-moz-placeholder { /* Firefox 4 - 18 */
+        color:white;
+        opacity: 1;
+      }
+}
+
+.sortableFormInput{
+    input {
+        @extend .sortableInput;
+        border-radius:0;
+        box-shadow:none;
+        &:focus{
+            box-shadow:none;
+            border-color:white;
+        }
+    }
+}
+
+.sortableContainer{
+    margin-left:-1em;
+    margin-right:1em;
+    @media(max-width:$screen-sm){
+        margin-top:4px;
+    }
+}
+
+.sortableItem{
+    background-color: rgba(26, 70, 118, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 1em;
+    margin-bottom: -1;
+    overflow:hidden;
+    font-size:16px;
+}
+
+.sortableItemText{
+    cursor:pointer;
+    display:inline-block;
+    margin-top:5px;
+}
+

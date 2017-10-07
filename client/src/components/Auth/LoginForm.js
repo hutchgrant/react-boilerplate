@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import AuthField from './AuthField';
 import authFields from './authFields';
-import * as actions from '../../actions';
+import * as actions from '../../actions/auth';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 let captcha;
@@ -105,8 +105,8 @@ class LoginForm extends Component {
                         <button className="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
                     </form>
                     <div className="profile-footer">
-                        <p>Don't have an account? <Link to="/signup">Register here</Link></p>
-                        <Link to="/password-recovery">Forgot your password?</Link>
+                        <p>Don't have an account? <Link to="/user/signup">Register here</Link></p>
+                        <Link to="/user/password-recovery">Forgot your password?</Link>
                     </div>
                 </div>
             </div>

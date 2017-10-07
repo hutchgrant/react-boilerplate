@@ -2,6 +2,28 @@ html, body, #root, .page {
     height: 100%;
 }
 
+a {
+    color: $color-highlight;
+    text-decoration: none;
+}
+a:hover {
+    color: #908080;
+    text-decoration: underline;
+}
+
+.text-muted {
+    color: $color-highlight;
+}
+
+.btn-default{
+    color: #fdfdfd;
+    background-color: $color-secondary;
+    border-color: #cccccc;
+}
+
 .cursorPointer {
     cursor: pointer;
+}
+.errorPage{
+    height:800px;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default ({ input, type, label, meta: { error, touched, invalid } }) => {    
+export default ({ input, type, label, value, meta: { error, touched, invalid } }) => {    
     if(type === 'checkbox'){
         return (
             <div className="agreement">
@@ -17,7 +17,7 @@ export default ({ input, type, label, meta: { error, touched, invalid } }) => {
     }
     return (
         <div className={`form-group ${ touched && invalid ? 'has-error' : ''}`}>
-            <input {...input} type={type} className="form-control" style={{ marginBottom: '5px' }} placeholder={label} />
+            <input {...input} value={input.value} type={type} className="form-control" style={{ marginBottom: '5px' }} placeholder={label} />
             <div className="text-danger" style={{ marginBottom: '20px' }}>
                 {touched && error}
             </div>

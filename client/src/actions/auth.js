@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER, LOGOUT_USER, INIT_FORM } from './types';
+import { FETCH_USER, LOGOUT_USER, INIT_FORM } from './authTypes';
 
 export const initForm = () => dispatch => {
     dispatch({ type: INIT_FORM, payload: {error: null}});
