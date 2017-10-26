@@ -7,7 +7,9 @@ class Header extends Component {
     
     componentDidMount() {
         $('.nav a').on('click', function(){
-            $('.navbar-collapse').removeClass('in');
+            if($(this).attr("class") !== "dropdown-toggle"){
+                $('.navbar-collapse').removeClass('in');
+            }
         });
     }
 
