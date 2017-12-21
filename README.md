@@ -1,21 +1,14 @@
-# react-boilerplate
+# React Boilerplate
 
-React Boilerplate with Authentication
+React Boilerplate with authentication, code-splitting,
+Sass, Bootstrap, administration dashboard
 
-<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_home.png"><img src="./screenshots/screen_home.png" width="280px"></a>
-<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_login.png"><img src="./screenshots/screen_login.png" width="280px"></a>
-<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_register.png"><img src="./screenshots/screen_register.png" width="280px"></a>
-<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/screenshots/screen_admin.png"><img src="./screenshots/screen_admin.png" width="280px"></a>
+<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/docs/screenshots/screen_home.png"><img src="./docs/screenshots/screen_home.png" width="280px"></a>
+<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/docs/screenshots/screen_login.png"><img src="./docs/screenshots/screen_login.png" width="280px"></a>
+<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/docs/screenshots/screen_register.png"><img src="./docs/screenshots/screen_register.png" width="280px"></a>
+<a href="https://github.com/hutchgrant/react-boilerplate/raw/master/docs/screenshots/screen_admin.png"><img src="./docs/screenshots/screen_admin.png" width="280px"></a>
 
-## Setup
-
-You'll need Node, npm, mongodb.
-
-If you want to use social media signin, you'll need API credentials from [Google+](https://console.developers.google.com/), [Twitter](https://apps.twitter.com/), [Facebook](https://developers.facebook.com/).
-
-Note: With Twitter's API, you need to ensure your application has permissions set to request email addresses
-
-You'll also need to sign up for [Google Recaptcha](http://www.google.com/recaptcha/admin) to get API keys.
+## Installation
 
 ```
 git clone https://github.com/hutchgrant/react-boilerplate.git
@@ -23,70 +16,41 @@ cd ./react-boilerplate
 npm install && npm install --prefix client
 ```
 
-Add your Google Recaptcha site key to ./client/.env
+## Configure
 
-```
-REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY=YourGoogleSiteKey
-```
+This software has some dependencies and requires initial configuration before it
+can be run successfully.
 
-### Development
+See
+[config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_CONFIG.md) for mongodb, session, cookie, social media(Google, Twitter,
+Facebook) signin, recaptcha, API, configurations.
 
-Edit ./config/dev.js to include your development API keys
+## Development
 
-```
-mongoURI: '',
-cookieKey: '',
-sessionKey: '',
-tokenSecret: '',
-googleRecaptchaSecret: '',
-googleClientId: '',
-googleClientSecret: '',
-facebookClientId: '',
-facebookClientSecret: '',
-twitterConsumerId: '',
-twitterConsumerSecret: '',
-redirectDomain: 'http://localhost:3000'
-```
-
-launch the server and client with monitors
+To start the environment in development mode:
 
 ```
 npm run dev
 ```
 
-### Production
+This will launch the API on localhost:5000 and Client on localhost:3000
+with monitors and hot loading.
 
-set the following environment variables on your host with your production API keys:
+## Production
 
-```
-MONGO_URI=''
-COOKIE_KEY=''
-SESSION_KEY=''
-TOKEN_SECRET=''
-GOOGLE_RECAPTCHA_SECRET='',
-GOOGLE_CLIENT_ID=''
-GOOGLE_CLIENT_SECRET=''
-FACEBOOK_CLIENT_ID=''
-FACEBOOK_CLIENT_SECRET=''
-TWITTER_CONSUMER_ID=''
-TWITTER_CONSUMER_SECRET=''
-REDIRECT_DOMAIN='https://yoursite.com'
-```
-
-Build client:
-
-```
-npm run build --prefix client
-```
+For information about running this software in a development environment, see
+[production documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_PROD.md).
 
 ## License
 
-react-boilerplate is available under the [MIT License](https://github.com/hutchgrant/react-boilerplate/blob/master/LICENSE).
+React Boilerplate is available under the
+[MIT License](https://github.com/hutchgrant/react-boilerplate/blob/master/LICENSE).
 
 ## Contributing
 
-All contributions will be placed under the same MIT license, contributers must agree to that license.
-For more information see [contributing](https://github.com/hutchgrant/react-boilerplate/blob/master/CONTRIBUTING.md).
+All contributions will be placed under the same MIT license, contributers must
+agree to that license. For more information see
+[contributing](https://github.com/hutchgrant/react-boilerplate/blob/master/CONTRIBUTING.md).
 
 ## Author
 
