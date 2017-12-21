@@ -1,136 +1,153 @@
+const express = require('express');
+const router = express.Router();
 const passport = require('passport');
+const crypto = require('crypto');
+const expressJwt = require('express-jwt');
 const keys = require('../config/keys');
+const authenticate = expressJwt({ secret: keys.tokenSecret });
+
 const jwt = require('../middleware/jwt');
 const validate = require('../middleware/validate');
-const expressJwt = require('express-jwt');  
-const authenticate = expressJwt({secret : keys.tokenSecret});
-const mongoose = require('mongoose');
-const crypto = require('crypto');
 const rateLimit = require('../middleware/limiter');
-const User = mongoose.model('User');
+const account = require('../lib/account');
 
-module.exports = app => {
-    
-    app.post('/auth/signup',
-        rateLimit('signup'),
-        validate.checkUserAndPass,
-        validate.getIPAgent,
-        passport.authenticate('local.signup', {
-            failureRedirect: '/auth/signup_error'
-        }), jwt.generateToken, (req, res) => {
-            res.status(200).json({
-                username: req.user.username,
-                token: req.token
-            });
-        }
-    );
+const User = require('../models/User');
 
-    app.get('/auth/signup_error', (req, res) => {
-        rateLimit('signup'),
-        res.json({
-            error: {
-                message: req.flash('error')
-            }
-        });
+router.post(
+  '/signup',
+  rateLimit('signup'),
+  validate.checkUser,
+  validate.checkPass,
+  validate.getIPAgent,
+  passport.authenticate('local.signup', {
+    failureRedirect: '/auth/signup_error'
+  }),
+  (req, res) => {
+    res.status(200).json({
+      username: req.user.username,
+      email: req.user.email,
+      verify: true,
+      token: null
     });
-    
-    app.post('/auth/login',
-        rateLimit('login'),
-        validate.checkUserAndPass,
-        validate.getIPAgent,
-        passport.authenticate('local.signin', {
-            failureRedirect: '/auth/login_error'
-        }), jwt.generateToken, (req, res) => {
-            req.session.signInAttempts = 0;
-            res.status(200).json({
-                username: req.user.username,
-                token: req.token,
-                admin: req.user.admin,
-                error: {}
-            });
-        }
-    );
+    req.logout();
+  }
+);
 
-    app.get('/auth/login_error', 
-        (req, res) => {
-        req.session.signInAttempts += 1;
-        res.json({
-            error: {
-                message: req.flash('error'),
-                attempts: req.session.signInAttempts
-            }
-        });
+router.get('/signup_error', (req, res) => {
+  rateLimit('signup'),
+    res.json({
+      error: {
+        message: req.flash('error')
+      },
+      verify: false
     });
+});
 
-    app.get('/auth/logout', (req, res) => {
-        req.logout();
-        res.redirect('/');
+router.post(
+  '/login',
+  rateLimit('login'),
+  validate.checkUser,
+  validate.checkPass,
+  validate.getIPAgent,
+  passport.authenticate('local.signin', {
+    failureRedirect: '/auth/login_error'
+  }),
+  jwt.generateToken,
+  (req, res) => {
+    req.session.signInAttempts = 0;
+    res.status(200).json({
+      username: req.user.username,
+      token: req.token,
+      admin: req.user.admin,
+      error: {}
     });
+  }
+);
 
-    app.get('/auth/current_user', authenticate, async (req, res, next) => {
-        try {
-            const user = await User.findOne({_id: req.user.id });
-            res.status(200).json({
-                username: user.username,
-                admin: user.admin
-            });
-        } catch(err){
-            res.status(500);
-        } 
-    });
+router.get('/login_error', (req, res) => {
+  req.session.signInAttempts += 1;
+  res.json({
+    error: {
+      message: req.flash('error'),
+      attempts: req.session.signInAttempts
+    }
+  });
+});
 
-    app.get('/auth/gentoken/:token', jwt.socialGenerateToken, (req, res,next) => {
-        res.status(200).json({
-            username: req.user.username,
-            admin: req.user.admin,
-            token: req.token
-        });
-    });
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
 
-    app.get(
-        '/auth/google',       
-        passport.authenticate('google', {
-          scope: ['profile', 'email']
-        })
-      );
-    
-    app.get(
-        '/auth/google/callback', 
-        validate.getIPAgent, 
-        passport.authenticate('google'),
-        (req, res) => {
-            req.session.genTokenHash = crypto.randomBytes(64).toString('hex');
-            res.redirect(`/user/dashboard?auth=${req.session.genTokenHash}`);
-        }
-    );
+router.get('/current_user', authenticate, async (req, res, next) => {
+  try {
+    const user = await User.findOne({ _id: req.user.id });
+    res.status(200).json({
+      username: user.username,
+      admin: user.admin
+    });
+  } catch (err) {
+    res.status(500);
+  }
+});
 
-    app.get(
-        '/auth/facebook',        
-        passport.authenticate('facebook', { 
-            scope: ['email'] 
-        }));
-  
-    app.get('/auth/facebook/callback', 
-        validate.getIPAgent,
-        passport.authenticate('facebook', { 
-            failureRedirect: '/login' 
-        }),
-    (req, res) =>{
-        req.session.genTokenHash = crypto.randomBytes(64).toString('hex');        
-        res.redirect(`/user/dashboard?auth=${req.session.genTokenHash}`);
-    });
-    
-    app.get('/auth/twitter',
-    passport.authenticate('twitter'));
-  
-  app.get(
-        '/auth/twitter/callback',
-        validate.getIPAgent,
-        passport.authenticate('twitter', { 
-            failureRedirect: '/login' 
-        }),
-    (req, res) => {
-        req.session.genTokenHash = crypto.randomBytes(64).toString('hex');        
-        res.redirect(`/user/dashboard?auth=${req.session.genTokenHash}`);
-    });
-};
+router.get('/gentoken/:token', jwt.socialGenerateToken, (req, res, next) => {
+  res.status(200).json({
+    username: req.user.username,
+    admin: req.user.admin,
+    token: req.token
+  });
+});
+
+router.get(
+  '/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email']
+  })
+);
+
+router.get(
+  '/google/callback',
+  validate.getIPAgent,
+  passport.authenticate('google'),
+  (req, res) => {
+    req.session.genTokenHash = crypto.randomBytes(64).toString('hex');
+    res.redirect(`/user/dashboard?auth=${req.session.genTokenHash}`);
+  }
+);
+
+router.get(
+  '/facebook',
+  passport.authenticate('facebook', {
+    scope: ['email']
+  })
+);
+
+router.get(
+  '/facebook/callback',
+  validate.getIPAgent,
+  passport.authenticate('facebook', {
+    failureRedirect: '/user/login'
+  }),
+  (req, res) => {
+    req.session.genTokenHash = crypto.randomBytes(64).toString('hex');
+    res.redirect(`/user/dashboard?auth=${req.session.genTokenHash}`);
+  }
+);
+
+router.get('/twitter', passport.authenticate('twitter'));
+
+router.get(
+  '/twitter/callback',
+  validate.getIPAgent,
+  passport.authenticate('twitter', {
+    failureRedirect: '/user/login'
+  }),
+  (req, res) => {
+    req.session.genTokenHash = crypto.randomBytes(64).toString('hex');
+    res.redirect(`/user/dashboard?auth=${req.session.genTokenHash}`);
+  }
+);
+router.use('/recovery', require('./recoveryRoutes'));
+
+module.exports = router;

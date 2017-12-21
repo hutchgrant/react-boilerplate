@@ -2,14 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const session = require('express-session');
+const redis = require('redis');
+const redisStore = require('connect-redis')(session);
+const client = redis.createClient();
 const helmet = require('helmet');
+const path = require('path');
 const passport = require('passport');
 const bodyParser = require('body-parser');
-const validator = require('express-validator'); 
+const validator = require('express-validator');
 const requestIp = require('request-ip');
 const flash = require('express-flash');
 const keys = require('./config/keys');
-require('./models/User');
 require('./services/passport');
 
 mongoose.connect(keys.mongoURI);
@@ -20,36 +23,52 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use(
-    cookieSession({
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        keys: [keys.cookieKey]
-    })
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [keys.cookieKey]
+  })
 );
-app.use(session({
+/* Development session store only */
+app.use(
+  session({
     secret: keys.sessionKey,
     resave: false,
     saveUninitialized: true
-  }))
+  })
+);
+// In production use a different session store such as Redis
+// see https://redis.io for install
+/* app.use(
+    require('express-session')({
+      secret: keys.sessionKey,
+      store: new redisStore({
+        host: 'localhost',
+        port: 6379,
+        client: client,
+        ttl: 86400
+      }),
+      resave: true,
+      saveUninitialized: true
+    })
+); */
+
+app.set('views', 'views');
+app.set('view engine', '.hbs');
+
 app.use(flash());
 app.use(helmet());
 app.use(requestIp.mw());
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./routes/authRoutes')(app);
+app.use('/auth', require('./routes/authRoutes'));
 
-if (process.env.NODE_ENV === 'production') {
-    // Express will serve up production assets
-    // like our main.js or main.css file!
-    app.use(express.static('client/build'));
-    
-    // Express will serve up the index.html file
-    // if it doesn't recognize the route
-    const path = require('path');
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    });
-}
+// remove if scaling client on seperate server
+app.use(express.static('client/build'));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+});
+///
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);

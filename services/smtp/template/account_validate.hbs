@@ -1,0 +1,101 @@
+<style type="text/css">
+    body {
+        background-color: #fff;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    h4 {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    a {
+        font-size: 14px;
+        color: rgb(234, 84, 77);
+    }
+
+    .title {
+        color: rgb(234, 84, 77);
+        font-size: 24px;
+        vertical-align: top;
+        font-weight: 600;
+    }
+
+    .total-col-1 {
+        width: 80%;
+    }
+
+    .total-col-2 {
+        width: 10%;
+    }
+
+    @media(max-width:600px) {
+        .total-col-1 {
+            width: 40%;
+        }
+        .total-col-2 {
+            width: 30%;
+        }
+    }
+
+    #total {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .main-table {
+        border: 1px solid rgba(148, 148, 148, 0.226);
+        background-color: #fff;
+        max-width: 700px;
+        margin: 0px auto
+    }
+</style>
+<table cellspacing="5" cellpadding="0" width="700" bgcolor="#fff" align="center" class="main-table">
+    <tbody>
+        <tr>
+            <td>
+                <table cellspacing="0" cellpadding="0" bgcolor="#fff" width="100%">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="{{logo}}" alt="logo" title="logo" width="25px" height="25px" />
+                                <span class="title">{{sitename}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br>
+                                <h4>{{fullname}},</h4>
+                                <p>To confirm your account at {{sitename}}, click the link below or copy and paste it into your
+                                    browser.
+                                </p>
+                                <br>
+                                <a href="{{link}}/user/verify?token={{token}}">{{link}}/user/verify?token={{token}}</a>
+                                <br>
+                                <p>If you did not make this request, please contact {{sitename}} through our
+                                    <a href="{{link}}/contact">contact page</a>
+                                </p>
+                                <br>
+                                <p>- {{sitename}} Team</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

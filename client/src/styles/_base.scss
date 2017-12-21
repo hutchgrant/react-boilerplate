@@ -1,29 +1,126 @@
-html, body, #root, .page {
-    height: 100%;
+html,
+body,
+#root,
+.page {
+  height: 100%;
+  background-color: $color-body-back;
+}
+
+.page {
+  background-color: $color-page-back;
 }
 
 a {
-    color: $color-highlight;
-    text-decoration: none;
+  color: $color-highlight;
+  text-decoration: none;
 }
 a:hover {
-    color: #908080;
-    text-decoration: underline;
+  color: #908080;
+  text-decoration: underline;
 }
 
 .text-muted {
-    color: $color-highlight;
+  color: $color-highlight;
 }
 
-.btn-default{
-    color: #fdfdfd;
-    background-color: $color-secondary;
-    border-color: #cccccc;
+.btn-default {
+  color: #fdfdfd;
+  background-color: $color-secondary;
+  border-color: #cccccc;
 }
 
 .cursorPointer {
-    cursor: pointer;
+  cursor: pointer;
 }
-.errorPage{
-    height:800px;
+.errorPage {
+  height: 800px;
+}
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  @media (min-width: 768px) {
+    width: 750px;
+  }
+  @media (min-width: 992px) {
+    width: 970px;
+  }
+  @media (min-width: 1200px) {
+    width: 1170px;
+  }
+}
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.content {
+  @extend .container;
+  min-height: 800px;
+  transition: none;
+}
+
+.form-control {
+  &:focus {
+    border-color: $color-material;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+      0 0 8px rgba(239, 82, 80, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+      0 0 8px rgba(239, 82, 80, 0.6);
+  }
+}
+
+.breadcrumb {
+  background-color: transparent;
+  > li > a {
+    font-weight: 600;
+    &:hover {
+      color: black;
+    }
+    &:focus {
+      color: red;
+    }
+  }
+}
+
+.page-card {
+  border: 1px solid red;
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 60px;
+  z-index: 1;
+
+  > .title {
+    width: 240px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background-color: white;
+    margin-top: -15px;
+  }
+  img {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  > div {
+    margin-left: auto;
+    width: 90%;
+    margin-right: auto;
+    text-align: center;
+  }
+  @media (max-width: 350px) {
+    margin-left: 0px;
+    margin-right: 0px;
+    .title {
+      width: 200px;
+    }
+    > div {
+      width: 95%;
+    }
+  }
 }
