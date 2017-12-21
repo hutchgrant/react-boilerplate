@@ -147,4 +147,4 @@ production for your email provider. See
 [production documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_PROD.md).
 
 You can add additional passport strategies see
-[Passportjs.org](https://passportsjs.org)
+[Passportjs.org](http://www.passportjs.org)

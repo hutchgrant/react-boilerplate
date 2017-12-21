@@ -8,7 +8,7 @@ meant primarily for development.
 You may also wish to create seperate configurations for production as each of
 the APIs this software utilizes requires unique configurations for each
 environment/domain. By default, the production configurations are located in (
-<strong>./API/config/prod.js</strong> ). You'll need to add those variables manually in your
+<strong>./config/prod.js</strong> ). You'll need to add those variables manually in your
 environment if you wish to use something else.
 
 You can build the client for production with
@@ -56,7 +56,7 @@ edit <strong>./src/package.json</strong> with the API credentials
 
 In production, you'll want to use a different email hosting provider. See [Nodemailer documentation](https://nodemailer.com/about/) for more information
 
-Suggest you modify the <strong>./config/prod.js<strong> with the following:
+Suggest you modify the <strong>./config/prod.js</strong> with the following:
 
 ```
 smtp: {
@@ -70,7 +70,7 @@ smtp: {
 }
 ```
 
-You will then need to uncomment <strong>./services/smtp/smtp.js<strong> line 16-22 with:
+You will then need to uncomment <strong>./services/smtp/smtp.js</strong> line 16-22 with:
 
 ```
 let transporter = nodemailer.createTransport({

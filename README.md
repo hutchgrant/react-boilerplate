@@ -22,8 +22,8 @@ This software has some dependencies and requires initial configuration before it
 can be run successfully.
 
 See
-[config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_CONFIG.md) for mongodb, session, cookie, social media(Google, Twitter,
-Facebook) signin, recaptcha, API, configurations.
+[config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_CONFIG.md) for mongodb, JWT, session, cookie, social media(Google, Twitter,
+Facebook) signin, recaptcha, API, SMTP, configurations.
 
 ## Development
 
@@ -38,7 +38,7 @@ with monitors and hot loading.
 
 ## Production
 
-For information about running this software in a development environment, see
+For information about running this software in a production environment, see
 [production documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_PROD.md).
 
 ## License
