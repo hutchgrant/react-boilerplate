@@ -1,26 +1,26 @@
 module.exports = {
-  mongoURI: 'mongodb://USER:PASSWORD@HOST/DATABASE',
-  cookieKey: 'SOME_COOKIE_KEY',
-  sessionKey: 'SOME_SESSION_KEY',
-  tokenSecret: 'SOME_JWT_TOKEN_SECRET',
-  redirectDomain: 'http://localhost:3000',
-  sitename: 'YOURSITE.com',
+  mongoURI: process.env.MONGO_URI,
+  cookieKey: process.env.COOKIE_KEY,
+  sessionKey: process.env.SESSION_KEY,
+  tokenSecret: process.env.TOKEN_SECRET,
+  redirectDomain: process.env.REDIRECT_DOMAIN,
+  sitename: process.env.SITE_NAME,
 
   google: {
-    recaptcha_secret: 'YOUR_RECAPTCHA_SERVER_SECRET',
-    client_id: 'YOUR_GOOGLE+_CLIENT_ID',
-    client_secret: 'YOUR_GOOGLE+_CLIENT_SECRET'
+    recaptcha_secret: process.env.GOOGLE_RECAPTCHA_SECRET,
+    client_id: process.env.GOOGLE_CLIENT_ID,
+    client_secret: process.env.GOOGLE_CLIENT_SECRET
   },
   facebook: {
-    client_id: 'YOUR_FB_APP_ID',
-    client_secret: 'YOUR_FB_APP_SECRET'
+    client_id: process.env.FACEBOOK_CLIENT_ID,
+    client_secret: process.env.FACEBOOK_CLIENT_SECRET
   },
   twitter: {
-    consumer_id: 'YOUR_TWITTER_CONSUMER_ID',
-    consumer_secret: 'YOUR_TWITTER_CONSUMER_SECRET'
+    consumer_id: process.env.TWITTER_CONSUMER_ID,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET
   },
   smtp: {
-    email: 'YOUR_SMTP_EMAIL@gmail.com',
-    password: 'YOUR_SMTP_PASS'
+    email: process.env.SMTP_EMAIL,
+    password: process.env.SMTP_PASS
   }
 };

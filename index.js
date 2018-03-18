@@ -2,9 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const session = require('express-session');
-const redis = require('redis');
-const redisStore = require('connect-redis')(session);
-const client = redis.createClient();
+
 const helmet = require('helmet');
 const path = require('path');
 const passport = require('passport');
@@ -28,21 +26,18 @@ app.use(
     keys: [keys.cookieKey]
   })
 );
-/* Development session store only */
-app.use(
-  session({
-    secret: keys.sessionKey,
-    resave: false,
-    saveUninitialized: true
-  })
-);
+
 // In production use a different session store such as Redis
 // see https://redis.io for install
-/* app.use(
+if (process.env.NODE_ENV === 'production') {
+  const redis = require('redis');
+  const redisStore = require('connect-redis')(session);
+  const client = redis.createClient();
+  app.use(
     require('express-session')({
       secret: keys.sessionKey,
       store: new redisStore({
-        host: 'localhost',
+        host: 'redis',
         port: 6379,
         client: client,
         ttl: 86400
@@ -50,7 +45,17 @@ app.use(
       resave: true,
       saveUninitialized: true
     })
-); */
+  );
+} else {
+  /* Development session store only */
+  app.use(
+    session({
+      secret: keys.sessionKey,
+      resave: false,
+      saveUninitialized: true
+    })
+  );
+}
 
 app.set('views', 'views');
 app.set('view engine', '.hbs');
@@ -62,6 +67,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/auth', require('./routes/authRoutes'));
+app.use('/healthz', function(req, res) {
+  // do app logic here to determine if app is truly healthy
+  // you should return 200 if healthy, and anything else will fail
+  // if you want, you should be able to restrict this to localhost (include ipv4 and ipv6)
+  res.send('I am happy and healthy\n');
+});
 
 // remove if scaling client on seperate server
 app.use(express.static('client/build'));

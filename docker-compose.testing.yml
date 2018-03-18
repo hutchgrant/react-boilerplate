@@ -1,0 +1,33 @@
+version: '3.1'
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  redis:
+    image: redis:alpine
+    volumes:
+      - data-redis:/data
+  mongo:
+    image: mongo
+    volumes:
+      - data-mongo:/data/db
+  node:
+    image: hutchgrant/react-boilerplate
+    command: npm start
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./config/prod.env
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - nginx-proxy
+      - mongo
+      - redis
+volumes:
+    data-mongo:
+    data-redis:

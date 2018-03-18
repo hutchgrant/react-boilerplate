@@ -8,7 +8,25 @@ Sass, Bootstrap, administration dashboard
 <a href="https://github.com/hutchgrant/react-boilerplate/raw/master/docs/screenshots/screen_register.png"><img src="./docs/screenshots/screen_register.png" width="280px"></a>
 <a href="https://github.com/hutchgrant/react-boilerplate/raw/master/docs/screenshots/screen_admin.png"><img src="./docs/screenshots/screen_admin.png" width="280px"></a>
 
-## Installation
+## Docker Development
+
+```
+docker-compose up
+```
+
+See [docker stack config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_CONFIG.md) for mongodb, session, cookie, social media(Google, Twitter,
+Facebook) signin, recaptcha, API, additional configurations.
+
+## Docker Production
+
+```
+docker stack deploy -c docker-compose.prod.yml reactboiler
+```
+
+See [docker stack config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_CONFIG.md) for mongodb, session, cookie, social media(Google, Twitter,
+Facebook) signin, recaptcha, API, additional configurations.
+
+## Local Installation
 
 ```
 git clone https://github.com/hutchgrant/react-boilerplate.git
