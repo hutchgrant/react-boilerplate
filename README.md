@@ -14,7 +14,7 @@ Sass, Bootstrap, administration dashboard
 docker-compose up
 ```
 
-See [docker stack config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_CONFIG.md) for mongodb, session, cookie, social media(Google, Twitter,
+See [docker stack config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_DOCKER.md) for mongodb, session, cookie, social media(Google, Twitter,
 Facebook) signin, recaptcha, API, additional configurations.
 
 ## Docker Production
@@ -23,7 +23,7 @@ Facebook) signin, recaptcha, API, additional configurations.
 docker stack deploy -c docker-compose.prod.yml reactboiler
 ```
 
-See [docker stack config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_CONFIG.md) for mongodb, session, cookie, social media(Google, Twitter,
+See [docker stack config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_DOCKER.md) for mongodb, session, cookie, social media(Google, Twitter,
 Facebook) signin, recaptcha, API, additional configurations.
 
 ## Local Installation
