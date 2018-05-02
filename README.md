@@ -17,6 +17,15 @@ docker-compose up
 See [docker stack config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_DOCKER.md) for mongodb, session, cookie, social media(Google, Twitter,
 Facebook) signin, recaptcha, API, additional configurations.
 
+## Docker Testing
+
+```
+docker-compose -f docker-compose.testing.yml up
+```
+
+See [docker stack config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_DOCKER.md) for mongodb, session, cookie, social media(Google, Twitter,
+Facebook) signin, recaptcha, API, additional configurations.
+
 ## Docker Production
 
 ```
@@ -53,6 +62,21 @@ npm run dev
 
 This will launch the API on localhost:5000 and Client on localhost:3000
 with monitors and hot loading.
+
+## Testing
+
+```
+npm run build
+npm run start-test
+```
+
+Then in a seperate shell
+
+```
+npm test
+```
+
+This will build then launch the API on localhost:5000 and Client on localhost:3000 using the ci.env environment. In your second window it will run all tests.
 
 ## Production
 
