@@ -3,13 +3,14 @@
 * [MongoDB](#mongo)
 * [API](#api)
 * [Recaptcha](#recaptcha)
+* [Passport](#passport)
 * [Google+ SignIn](#google-signin)
 * [Facebook SignIn](#facebook-signin)
 * [Twitter SignIn](#twitter-signin)
 * [SMTP](#smtp)
 * [Nginx and LetsEncrypt](#nginx-and-letsencrypt)
 
-<strong>Reminder</strong> in order to differentiate development and production keys this project's <strong>docker stack</strong>requires configurations be placed in environment variables. For simplicity, all environment variables can be placed in <strong>./config/dev.env</strong> for development and/or <strong>./config/prod.env</strong> for production.
+<strong>Reminder</strong> in order to differentiate development and production keys this project's <strong>docker stack</strong>requires configurations be placed in environment variables. For simplicity, all environment variables can be placed in <strong>./config/dev.env</strong> for development,<strong>./config/ci.env</strong> for testing<strong>, ./config/prod.env</strong> for production.
 
 ## MongoDB
 
@@ -27,7 +28,7 @@ The API utilizes json web token based authentication and stores each user within
 session. You can create your own tokenSecret, cookieKey and sessionKey. The redirectDomain is
 the location of the application itself(seperate from the API). By default the
 API is on port 5000 and the application(redirectDomain) is on port 3000 of the
-localhost. On production you should use https://yoursite.com
+localhost. In production you should use https://yoursite.com
 
 edit <strong>./config/dev.env</strong> with your API credentials
 
@@ -49,6 +50,13 @@ edit <strong>./config/dev.env</strong> with your google recaptcha credentials
 GOOGLE_RECAPTCHA_SECRET=some-recaptcha-key
 REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY=YourGoogleRecaptchaKey
 ```
+
+## Passport
+
+React-Boilerplate is currently using the passport strategies: Local Strategy, [Google OAuth2]((#google-signin), [facebook](#facebook-signin), [twitter](#twitter-signin).
+
+To read more about these and additional passport strategies see
+[Passportjs.org](http://www.passportjs.org)
 
 ## Google+ SignIn
 
@@ -118,9 +126,6 @@ edit <strong>./config/dev.env</strong> with your smtp credentials
 SMTP_EMAIL=youremail@gmail.com
 SMTP_PASS=your-password
 ```
-
-You can add additional passport strategies see
-[Passportjs.org](http://www.passportjs.org)
 
 ## Nginx and LetsEncrypt
 
