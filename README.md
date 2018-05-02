@@ -1,4 +1,5 @@
 # React Boilerplate
+[![Build Status](https://travis-ci.org/hutchgrant/react-boilerplate.svg?branch=master)](https://travis-ci.org/hutchgrant/react-boilerplate)
 
 React Boilerplate with authentication, code-splitting,
 Sass, Bootstrap, administration dashboard
