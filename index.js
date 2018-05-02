@@ -10,10 +10,25 @@ const bodyParser = require('body-parser');
 const validator = require('express-validator');
 const requestIp = require('request-ip');
 const flash = require('express-flash');
+
+if (!process.env.NODE_CONTAINER_STACK) {
+  if (process.env.NODE_ENV === 'production') {
+    require('dotenv').config({ path: './config/prod.env' });
+  } else if (process.env.NODE_ENV === 'ci') {
+    require('dotenv').config({ path: './config/ci.env' });
+    if (process.env.TRAVIS_CI) {
+      process.env.MONGO_URI = 'mongodb://127.0.0.1/reactboiler';
+    }
+  } else {
+    require('dotenv').config({ path: './config/dev.env' });
+  }
+}
+
 const keys = require('./config/keys');
 require('./services/passport');
 
-mongoose.connect(keys.mongoURI);
+mongoose.Promise = global.Promise;
+mongoose.connect(keys.mongoURI, { useMongoClient: true });
 
 const app = express();
 
