@@ -29,6 +29,7 @@ services:
       - data-react-build:/opt/app/client/build
     environment:
       - NODE_ENV=development
+      - NODE_CONTAINER_STACK=true
     depends_on:
       - mongo
       - redis

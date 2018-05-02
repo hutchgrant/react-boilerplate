@@ -1,12 +1,6 @@
 version: '3.1'
 
 services:
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    ports:
-      - "80:80"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
   redis:
     image: redis:alpine
     volumes:
@@ -16,16 +10,17 @@ services:
     volumes:
       - data-mongo:/data/db
   node:
-    image: hutchgrant/react-boilerplate
-    command: npm start
+    image: hutchgrant/react-boilerplate:latest
+    command: bash -c "npm run start & sleep 3 & npm test"
     ports:
-      - "5000:5000"
+      - "3000:3000"
     env_file:
-      - ./config/prod.env
+      - ./config/ci.env
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=ci
+      - PORT=3000
+      - NODE_CONTAINER_STACK=true
     depends_on:
-      - nginx-proxy
       - mongo
       - redis
 volumes:

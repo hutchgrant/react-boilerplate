@@ -39,6 +39,7 @@ services:
       - ./config/prod.env
     environment:
       - NODE_ENV=production
+      - NODE_CONTAINER_STACK=true
     depends_on:
       - nginx-proxy-companion
       - mongo
