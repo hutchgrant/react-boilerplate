@@ -8,7 +8,7 @@ meant primarily for development.
 You may also wish to create seperate configurations for production as each of
 the APIs this software utilizes requires unique configurations for each
 environment/domain. By default, the production configurations are located in
-<strong>./config/prod.env</strong> when being run from a container. You'll need to add/edit those variables manually in your environment if you wish to use something else. <strong>./config/prod.local.env</storng> is the environment file used when not running in a container.
+<strong>./config/prod.env</strong> when being run from a container. You'll need to add/edit those variables manually in your environment if you wish to use something else. <strong>./config/prod.local.env</strong> is the environment file used when not running in a container.
 <strong>./config/shared.local.env</strong> is shared among all environments but can be overwritten by each environment.
 
 You can build the client for production with
