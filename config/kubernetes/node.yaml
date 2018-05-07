@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: boilerplate-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: react-boilerplate
+    spec:
+      containers:
+      - name: react-boilerplate
+        image: hutchgrant/react-boilerplate
+        command: ['bash', '-c', 'npm run start']
+        ports:
+        - name: nodejs-port
+          containerPort: 5000
+        envFrom:
+        - secretRef:
+            name: mysecret

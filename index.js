@@ -10,20 +10,7 @@ const bodyParser = require('body-parser');
 const validator = require('express-validator');
 const requestIp = require('request-ip');
 const flash = require('express-flash');
-
-if (!process.env.NODE_CONTAINER_STACK) {
-  if (process.env.NODE_ENV === 'production') {
-    require('dotenv').config({ path: './config/prod.env' });
-  } else if (process.env.NODE_ENV === 'ci') {
-    require('dotenv').config({ path: './config/ci.env' });
-    if (process.env.TRAVIS_CI) {
-      process.env.MONGO_URI = 'mongodb://127.0.0.1/reactboiler';
-    }
-  } else {
-    require('dotenv').config({ path: './config/dev.env' });
-  }
-}
-
+const env = require('./config/manage').setEnvironments();
 const keys = require('./config/keys');
 require('./services/passport');
 
@@ -52,8 +39,8 @@ if (process.env.NODE_ENV === 'production') {
     require('express-session')({
       secret: keys.sessionKey,
       store: new redisStore({
-        host: 'redis',
-        port: 6379,
+        host: keys.redis.url,
+        port: keys.redis.port,
         client: client,
         ttl: 86400
       }),

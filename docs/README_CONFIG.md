@@ -11,7 +11,7 @@
 * [SMTP](#smtp)
 * [Nginx and LetsEncrypt](#nginx-and-letsencrypt)
 
-<strong>Reminder</strong> in order to differentiate development and production keys this project requires configurations be placed in environment variables. For simplicity, all environment variables can be placed in <strong>./config/dev.env</strong> for development,<strong>./config/ci.env</strong> for testing<strong>, ./config/prod.env</strong> for production.
+<strong>Reminder</strong> in order to differentiate development and production keys this project requires configurations be placed in environment variables. For simplicity, all environment variables can be placed in <strong>./config/dev.env</strong> for development,<strong>./config/ci.env</strong> for testing<strong>, ./config/prod.env</strong> for production. <strong>Note:</strong> the .local. filename convention is for local installations made using git or compressed archive and are not being used in a kubernetes or docker-compose cluster. <strong>./config/shared.env</strong> is shared among all environments but can be overwritten by each specific environment.
 
 ## MongoDB
 

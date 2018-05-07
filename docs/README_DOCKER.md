@@ -1,141 +1,39 @@
-# Docker Configuration
+# React Boilerplate Docker Stack
 
-* [MongoDB](#mongo)
-* [API](#api)
-* [Recaptcha](#recaptcha)
-* [Passport](#passport)
-* [Google+ SignIn](#google-signin)
-* [Facebook SignIn](#facebook-signin)
-* [Twitter SignIn](#twitter-signin)
-* [SMTP](#smtp)
-* [Nginx and LetsEncrypt](#nginx-and-letsencrypt)
+## Prerequisites:
 
-<strong>Reminder</strong> in order to differentiate development and production keys this project's <strong>docker stack</strong>requires configurations be placed in environment variables. For simplicity, all environment variables can be placed in <strong>./config/dev.env</strong> for development,<strong>./config/ci.env</strong> for testing<strong>, ./config/prod.env</strong> for production.
-
-## MongoDB
-
-edit <strong>./config/dev.env</strong> with your mongo credentials
+* [docker](https://www.docker.com/community-edition)
+* [docker-compose](https://docs.docker.com/compose/install/)
 
 ```
-MONGO_URI=mongodb://mongo/reactboiler
+git clone https://github.com/hutchgrant/react-boilerplate.git
+cd react-boilerplate/docker
 ```
 
-Note: MONGO_URI is preset to the mongo container in project's docker-compose file by default, only edit this if you plan on using a different mongo database, perhaps on a different container.
+See [config documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_CONFIG.md) for information about setting up your environments.
 
-## API
+The following will download and setup a cluster using react-boilerplate, nodejs, redis, mongo, containers. Using docker, it will launch all these containers, with react-boilerplate's node API being available on http://localhost:5000 and react-boilerplate's react frontend on http://localhost:3000
 
-The API utilizes json web token based authentication and stores each user within a
-session. You can create your own tokenSecret, cookieKey and sessionKey. The redirectDomain is
-the location of the application itself(seperate from the API). By default the
-API is on port 5000 and the application(redirectDomain) is on port 3000 of the
-localhost. In production you should use https://yoursite.com
+## Development
 
-edit <strong>./config/dev.env</strong> with your API credentials
+Development environment that includes monitors and hot loading.
 
 ```
-COOKIE_KEY=some-random-cookie-key
-SESSION_KEY=some-random-session-key
-TOKEN_SECRET=some-random-token-key
-REDIRECT_DOMAIN=http://localhost:3000
-SITE_NAME=react-boilerplate
+docker-compose up
 ```
 
-## Recaptcha
+## Testing
 
-Register a new site with [invisible recaptcha](https://www.google.com/recaptcha)
-
-edit <strong>./config/dev.env</strong> with your google recaptcha credentials
+Testing environment connects to a mongo database and then executes jest with puppeteer.
 
 ```
-GOOGLE_RECAPTCHA_SECRET=some-recaptcha-key
-REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY=YourGoogleRecaptchaKey
+docker-compose -f docker-compose.testing.yml up
 ```
 
-## Passport
+## Production
 
-React-Boilerplate is currently using the passport strategies: Local Strategy, [Google OAuth2]((#google-signin), [facebook](#facebook-signin), [twitter](#twitter-signin).
-
-To read more about these and additional passport strategies see
-[Passportjs.org](http://www.passportjs.org)
-
-## Google+ SignIn
-
-You'll need developer API credentials for
-[Google+](https://console.developers.google.com/).
-
-Add a new project, add the Google+ API library, create OAuth2.0 credentials
-
-Set Authorised JavaScript origins: http://localhost:5000
-
-Set Authorised redirect URIs: http://localhost:3000/auth/google/callback
-
-<strong>Reminder</strong> you'll need to set these URLs differently in
-production for your domain. See
-[production documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_PROD.md).
-
-edit <strong>./config/dev.env</strong> with your google+ credentials
+Production environment runs without monitors, hot loading, or any tests. It runs asset objects such as css/js/html/image files from the client/build directory directly to http://localhost:5000.
 
 ```
-GOOGLE_CLIENT_ID=some-google-key
-GOOGLE_CLIENT_SECRET=some-google-secret-key
-```
-
-## Facebook SignIn
-
-You'll need developer API credentials for
-[Facebook](https://developers.facebook.com/). Create an application, add
-facebook SignIn.
-
-edit <strong>./config/dev.env</strong> with your facebook credentials
-
-```
-FACEBOOK_CLIENT_ID=some-facebook-id
-FACEBOOK_CLIENT_SECRET=some-facebook-secret
-```
-
-## Twitter Signin
-
-You'll need developer API credentials for [Twitter](https://apps.twitter.com/).
-
-In the twitter app settings tab, set the twitter app callback URL:
-<strong>http://localhost:5000/auth/twitter/callback</strong>
-
-<strong>Reminder</strong> you'll need to set this URL differently in
-production for your domain. See
-[production documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_PROD.md).
-
-In the twitter app permissions tab, check the box that says "request email
-addresses from users" and then click the update settings button
-
-edit <strong>./config/dev.env</strong> with your twitter credentials
-
-```
-TWITTER_CONSUMER_ID=some-twitter-id
-TWITTER_CONSUMER_SECRET=some-twitter-secret
-```
-
-<strong>Reminder</strong> in order to differentiate development and production keys, you'll need to set <strong>./config/prod.env</strong> with seperate keys for that environment
-
-## SMTP
-
-React Boilerplate uses nodemailer and by default we have it set to use a gmail account for development. In order to use [nodemailer with your gmail account](https://nodemailer.com/usage/using-gmail/) you need to enable "less secure" apps in gmail. You can enable it [here](https://myaccount.google.com/lesssecureapps).
-
-edit <strong>./config/dev.env</strong> with your smtp credentials
-
-```
-SMTP_EMAIL=youremail@gmail.com
-SMTP_PASS=your-password
-```
-
-## Nginx and LetsEncrypt
-
-In <strong>production and staging/testing</strong>, it's assumed you will be using nginx and SSL sertificates. To configure nginx and generate a new lets encrypt ssl certificate for your domain, edit the following env variables with your domain and your email address. You should keep the virtual_port the same unless you know what you're doing. Make sure you've already changed your domain's records to point to the server you're running this on, otherwise letsencrypt will not generate you a certificate.
-
-Ignore this step in development, it won't do anything.
-
-```
-VIRTUAL_HOST=yoursite.com,www.yoursite.com
-VIRTUAL_PORT=5000
-LETSENCRYPT_HOST=yoursite.com,www.yoursite.com
-LETSENCRYPT_EMAIL=youradmin@email.com
+docker stack deploy -c docker-compose.prod.yml reactboiler
 ```

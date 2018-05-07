@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+  redis:
+    image: redis:alpine
+    volumes:
+      - data-redis:/data
+  mongo:
+    image: mongo
+    volumes:
+      - data-mongo:/data/db
+  node:
+    image: hutchgrant/react-boilerplate:latest
+    command: bash -c "npm run start & sleep 3 & npm test"
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../shared.env
+      - ../ci.env
+    environment:
+      - NODE_ENV=ci
+      - PORT=3000
+      - NODE_CONTAINER_STACK=true
+    depends_on:
+      - mongo
+      - redis
+volumes:
+    data-mongo:
+    data-redis:

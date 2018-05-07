@@ -1,4 +1,5 @@
 # React Boilerplate
+
 [![Build Status](https://travis-ci.org/hutchgrant/react-boilerplate.svg?branch=master)](https://travis-ci.org/hutchgrant/react-boilerplate)
 
 React Boilerplate with authentication, code-splitting,
@@ -9,27 +10,22 @@ Sass, Bootstrap, administration dashboard
 <a href="https://github.com/hutchgrant/react-boilerplate/raw/master/docs/screenshots/screen_register.png"><img src="./docs/screenshots/screen_register.png" width="280px"></a>
 <a href="https://github.com/hutchgrant/react-boilerplate/raw/master/docs/screenshots/screen_admin.png"><img src="./docs/screenshots/screen_admin.png" width="280px"></a>
 
-## Docker
+## Cluster Installation and Usage
 
-### Development
-```
-docker-compose up
-```
+### Kubernetes
 
-### Testing
+See [kubernetes instructions](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_K8.md) for how to setup a React Boilerplate, scalable, cluster, using Google Cloud, with all the prerequisite software installed and preconfigured.
 
-```
-docker-compose -f docker-compose.testing.yml up
-```
+### Docker
 
-### Production
+See [docker instructions](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_DOCKER.md) for how to use the React Boilerplate, Docker, Stack, with all the prerequisite software installed and preconfigured.
 
-```
-docker stack deploy -c docker-compose.prod.yml reactboiler
-```
----
+## Local Installation and Usage
 
-## Local Installation
+Prerequisites:
+
+* Mongo
+* Redis
 
 ```
 git clone https://github.com/hutchgrant/react-boilerplate.git
@@ -54,10 +50,12 @@ To start the environment in development mode:
 npm run dev
 ```
 
-This will launch the API on localhost:5000 and Client on localhost:3000
+This will launch the API on http://localhost:5000 and Client on http://localhost:3000
 with monitors and hot loading.
 
 ### Testing
+
+Testing environment connects to a mongo database and then executes jest with puppeteer.
 
 ```
 npm run build
@@ -69,8 +67,6 @@ Then in a seperate shell
 ```
 npm test
 ```
-
-This will build then launch the API on localhost:5000 and Client on localhost:3000 using the ci.env environment. In your second window it will run all tests.
 
 ### Production
 

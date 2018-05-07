@@ -1,5 +1,9 @@
 module.exports = {
   mongoURI: process.env.MONGO_URI,
+  redis: {
+    url: process.env.REDIS_URL,
+    port: process.env.REDIS_PORT
+  },
   cookieKey: process.env.COOKIE_KEY,
   sessionKey: process.env.SESSION_KEY,
   tokenSecret: process.env.TOKEN_SECRET,

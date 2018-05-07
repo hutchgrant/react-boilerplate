@@ -1,0 +1,42 @@
+version: '3.1'
+
+services:
+  redis:
+    image: redis:alpine
+    volumes:
+      - data-redis:/data
+  mongo:
+    image: mongo
+    volumes:
+      - data-mongo:/data/db
+  node:
+    # Uncomment build to autobuild on compose-up    
+    # build:
+    #  context: .
+    #  args:
+    #    - NODE_ENV=development
+    image: hutchgrant/react-boilerplate
+    env_file:
+      - ../shared.env
+      - ../dev.env
+    command: npm run dev
+    ports:
+      - "3000:3000"
+      - "5000:5000"
+    volumes:
+      - ../..:/opt/app:delegated
+      - data-modules:/opt/app/node_modules
+      - data-react-modules:/opt/app/client/node_modules
+      - data-react-build:/opt/app/client/build
+    environment:
+      - NODE_ENV=development
+      - NODE_CONTAINER_STACK=true
+    depends_on:
+      - mongo
+      - redis
+volumes:
+    data-mongo:
+    data-redis:
+    data-modules:
+    data-react-modules:
+    data-react-build:
