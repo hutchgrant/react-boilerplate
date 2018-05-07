@@ -6,8 +6,11 @@ The following explains how to install and configure a kubernetes cluster with re
 
 * install gcloud sdk
 * install kubectl
-* git clone https://github.com/hutchgrant/react-boilerplate.git
-* cd ./react-boilerplate
+* download react-boilerplate:
+```
+git clone https://github.com/hutchgrant/react-boilerplate.git
+cd ./react-boilerplate
+```
 
 Initialize Google Cloud SDK
 
@@ -18,16 +21,15 @@ gcloud init
 * login
 * select project / create new project
 
-## 2. Create cluser
+## 2. Create cluster
 
 ```
-cd ./config/kubernetes
-
 gcloud container clusters create react-boilerplate --num-nodes=2
 ```
 
-## 3. Create static ip
+## 3. Reserve static ip
 
+Reserve static, global, IP, named node
 ```
 gcloud compute addresses create node --global
 ```
@@ -35,7 +37,8 @@ gcloud compute addresses create node --global
 ## 4. Create secret for environment
 
 ```
-nano ../prod.env
+cd ./config
+nano prod.env
 ```
 
 Edit with your production credentials. Save and then make a secret.
@@ -47,6 +50,7 @@ kubectl create secret generic mysecret --from-env-file=prod.env
 ## 5. Launch all deployments and services
 
 ```
+cd ./kubernetes
 kubectl create -f .
 ```
 
@@ -80,6 +84,7 @@ You can do this with our cluster by running:
 ```
 kubectl get pods
 ```
+To get a list of running pods, copy the container name then execute bash on boilerplate-deployment container
 
 ```
 kubectl exec -it boilerplate-deployment-c559f57f9-59vvl /bin/bash
@@ -88,7 +93,7 @@ mkdir .well-known/acme-challenge -p
 cd .well-known/acme-challenge
 ```
 
-Then just output each file requested:
+Then just output each to a file as requested:
 
 ```
 echo 'dajkld3q88sd9q2dqd8asjdajds9a' > 'asdsadaskdajbdakbdjkbdkjawdjknsakda'
