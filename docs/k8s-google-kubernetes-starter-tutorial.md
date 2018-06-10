@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- [Google Cloud Starter Tutorial](:/a253bd779587486da5d73aa9995b696a)
+- [Google Cloud Starter Tutorial](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-google-cloud-starter-tutorial.md)
 - Ubuntu 16.04 but you could use any OS with different commands
 
 ## Install kubectl
