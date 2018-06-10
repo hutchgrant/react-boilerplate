@@ -24,7 +24,7 @@ metadata:
 
 ### Create Deployment
 
-Use the following template redis-deploy.yml to launch a mongo deployment with --auth argument.
+Use the following template redis-deploy.yml to launch a redis deployment with a persistent volume
 ```ruby
 apiVersion: extensions/v1beta1
 kind: Deployment
