@@ -1,0 +1,43 @@
+image: docker:latest
+
+before_script:
+  - export PACKAGE_VERSION=$(grep '"version":' package.json | cut -d\" -f4)
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+stages:
+  - build
+  - test
+  - deploy
+  
+build:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$PACKAGE_VERSION .
+    - docker tag $CI_REGISTRY_IMAGE:$PACKAGE_VERSION $CI_REGISTRY_IMAGE/testing:latest
+    
+test:
+  stage: test
+  script:
+    - apk add --update py-pip
+    - pip install docker-compose
+    - docker-compose -f ./config/docker/docker-compose.testing.yml up --force-recreate --exit-code-from node
+    
+deploy:
+  stage: deploy
+  environment:
+    name: production
+    url: https://hutchdev.ca
+  when: manual
+  script: 
+    - docker tag $CI_REGISTRY_IMAGE:$PACKAGE_VERSION $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:$PACKAGE_VERSION
+    - apk add --no-cache curl
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/local/bin/kubectl
+    - kubectl config set-cluster my-cluster --server="$KUBE_URL" --insecure-skip-tls-verify=true
+    - kubectl config set-credentials admin --username="$KUBE_USER" --password="$KUBE_PASSWORD"
+    - kubectl config set-context default --cluster=my-cluster --user=admin
+    - kubectl config use-context default
+    - kubectl set image deployment/boilerplate-deployment react-boilerplate=$CI_REGISTRY_IMAGE:$PACKAGE_VERSION -n default
