@@ -14,7 +14,7 @@ Sass, Bootstrap, administration dashboard
 
 ### Kubernetes
 
-See [kubernetes instructions](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_K8.md) for how to setup a React Boilerplate, scalable, cluster, using Google Cloud, with all the prerequisite software installed and preconfigured.
+See [kubernetes instructions](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_K8S.md) for how to setup a React Boilerplate, scalable, cluster, using Google Cloud, with all the prerequisite software installed and preconfigured.
 
 ### Docker
 
@@ -24,8 +24,8 @@ See [docker instructions](https://github.com/hutchgrant/react-boilerplate/blob/m
 
 Prerequisites:
 
-* Mongo
-* Redis
+- Mongo
+- Redis
 
 ```
 git clone https://github.com/hutchgrant/react-boilerplate.git
