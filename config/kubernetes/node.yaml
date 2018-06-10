@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: boilerplate-deployment
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: react-boilerplate
-        image: hutchgrant/react-boilerplate
+        image: hutchgrant/react-boilerplate:latest
         command: ['bash', '-c', 'npm run start']
         ports:
         - name: nodejs-port
@@ -19,3 +19,17 @@ spec:
         envFrom:
         - secretRef:
             name: mysecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boilerplate-service
+  labels:
+    app: react-boilerplate
+spec:
+  ports:
+    - port: 80
+      name: http
+      targetPort: nodejs-port
+  selector:
+    app: react-boilerplate

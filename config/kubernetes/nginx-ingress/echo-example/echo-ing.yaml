@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: echomap
+  annotations: {
+    'kubernetes.io/ingress.class': nginx
+  }
+spec:
+  rules:
+  - host: foo.bar.com
+    http:
+      paths:
+      - path: /foo
+        backend:
+          serviceName: echoheaders
+          servicePort: 80
