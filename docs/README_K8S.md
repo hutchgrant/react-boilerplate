@@ -12,7 +12,7 @@ The following is a list of guides created specifically for this project for use 
 
 5.  [Install a new React Boilerplate deployment and service](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-react-boilerplate-install-guide.md)
 
-6.  Install an external nginx proxy that points to your cluster's nodes running nginx-ingress. Coming soon.
+6.  [Install an external nginx proxy instance that points to your cluster's nodes running nginx-ingress](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-nginx-ingress-guide.md)
 
 7.  Install Helm and Tiller to assist with installation of cluster resources such as cert manager. Coming soon.
 

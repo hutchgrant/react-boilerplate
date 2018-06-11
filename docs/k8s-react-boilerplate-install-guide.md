@@ -125,7 +125,7 @@ kubectl get pods
 Copy the full pod name that has 'boilerplate-deployment' in its name.
 
 ```bash
-kubectl logs kubectl logs boilerplate-deployment-6d9b744db5-gwmgv
+kubectl logs boilerplate-deployment-6d9b744db5-gwmgv
 ```
 
 Should result in:
@@ -137,4 +137,4 @@ Should result in:
 
 If you see any error related to mongo, double check you've installed and configured the Mongo admin accounts correctly. Anything about Google OAuth make sure you've configured the Google+ API correctly, see [Configure Environment](#Configure-Environment) above.
 
-Congratulations you successfully installed react boilerplate. But hold on, how do you view it? You'll need to forward your domain to an external nginx proxy that connects to an internal nginx ingress on your kubernetes cluster(guide coming soon). Also you may wish to use Google's built in LoadBalancer instead. The former way is cheaper but still needs an internal load balancer to scale and lacks features that Google's built in LoadBalancer has.
+Congratulations you successfully installed react boilerplate. But hold on, how do you view it? You'll need to forward your domain to an external nginx proxy that connects to an internal nginx ingress on your kubernetes cluster(see [nginx-proxy-and-ingress guide](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-nginx-ingress-guide.md)). Also you may wish to use Google's built in LoadBalancer instead. The former method is cheaper but still needs an internal load balancer to scale and lacks features that Google's built in LoadBalancer has.
