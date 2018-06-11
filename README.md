@@ -75,6 +75,21 @@ For information about running this software in a production environment, see
 
 ---
 
+## Scaffolding
+
+A yeoman generator for react-boilerplate is available and is easy to install.
+
+```bash
+npm install -g generator-react-auth
+```
+
+Create a new application with react-boilerplate as the base by:
+
+```bash
+mkdir my-awesome-app && cd my-awesome-app
+yo react-auth
+```
+
 ## License
 
 React Boilerplate is available under the
