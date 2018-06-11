@@ -17,3 +17,7 @@ The following is a list of guides created specifically for this project for use 
 7.  Install Helm and Tiller to assist with installation of cluster resources such as cert manager. Coming soon.
 
 8.  Install cert manager and add certificate+issuer resources. Coming soon.
+
+9.  Setup a Gitlab CI Kubernetes Runner
+
+10. Gitlab Continuous Integration and Deployment using Docker with Kubernetes.

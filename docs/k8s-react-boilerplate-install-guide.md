@@ -9,6 +9,13 @@ This guide explains how to install and configure a kubernetes cluster with react
 - [Mongo Kubernetes Install Guide](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-mongo-install-guide.md)
 - [Redis Kubernetes Install Guide](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-redis-install-guide.md)
 
+## Get Repository
+
+```bash
+git clone https://github.com/hutchgrant/react-boilerplate.git
+cd react-boilerplate
+```
+
 ## Configure Environment
 
 React Boilerplate needs a number of environment variables to start correctly. To read more about how get credentials for social media signin such as Google+, Twitter, Facebook, [see related documentation](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/README_CONFIG.md).
@@ -42,7 +49,7 @@ SMTP_PASS=your-password
 Now with those environment variables we can create a secret which will be accessible to the react-boilerplate deployment. 'mysecret' is the default name
 
 ```bash
-kubectl create secret generic mysecret --from-env-file=./config/prod.env
+kubectl create secret generic mysecret --from-env-file=config/prod.env
 ```
 
 ## Install Deployment and Service
@@ -50,7 +57,7 @@ kubectl create secret generic mysecret --from-env-file=./config/prod.env
 Launch the React Boilerplate deployment on port 5000 and expose that port using a service
 
 ```bash
-kubectl apply -f ./config/kubernetes/node.yaml
+kubectl apply -f config/kubernetes/node.yaml
 ```
 
 node.yaml:
@@ -101,7 +108,7 @@ Check to see a react-deployment pod was created
 kubectl get pods
 ```
 
-if the pod's status is still "CreatingContainer" or 'Error' try running kubectl describe on that pod to see what it's doing. Keep in mind it will take a few minutes to initially download the container image.
+if the pod's status is still "ContainerCreating" or 'Error' try running kubectl describe on that pod to see what it's doing. Keep in mind it will take a few minutes to initially download the container image.
 
 ```bash
 kubectl describe pod boilerplate-deployment-6d9b744db5-gwmgv

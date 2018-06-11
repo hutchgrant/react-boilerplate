@@ -5,8 +5,8 @@
 ## Quick Install
 
 ```bash
-wget https://raw.githubusercontent.com/hutchgrant/react-boilerplate/master/config/kubernetes/redis/redis.yaml
-kubectl apply -f redis.yaml
+wget https://raw.githubusercontent.com/hutchgrant/react-boilerplate/master/config/kubernetes/mongo/mongo.yaml
+kubectl apply -f mongo.yaml
 ```
 
 ## Manual/Custom Install
@@ -118,7 +118,7 @@ mongo-59d64b6bfd-58876   1/1       Running   0          1h
 Execute bash on pod
 
 ```bash
-kubectl exec -it mongo-59d64b6bfd-58876 -n main /bin/bash
+kubectl exec -it mongo-59d64b6bfd-58876 -n main bash
 root@mongo-59d64b6bfd-58876:/#
 ```
 
@@ -167,7 +167,7 @@ db.createUser(
 );
 ```
 
-Get your Mongo Cluster IP:
+Exit mongo and the pod. Back in your local terminal, get your Mongo Cluster IP:
 
 ```sh
 kubectl get svc -n main | grep mongo
@@ -177,7 +177,7 @@ mongo     ClusterIP   10.11.250.248   <none>        27017/TCP   1h
 Now you can login to mongo from any pod on the cluster by using
 
 ```sh
-mongodb://some-username:some-password@your_mongo_cluster_ip_address/react-boilerplate
+mongodb://some-username:some-app-password@your_mongo_cluster_ip_address/react-boilerplate
 ```
 
 Congratulations you successfully installed mongo in a Kubernetes cluster.

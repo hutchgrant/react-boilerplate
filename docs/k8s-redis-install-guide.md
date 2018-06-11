@@ -1,6 +1,6 @@
 # Redis Kubernetes Install
 
-* [Official Redis Google Cloud Launcher Image Documentation](https://github.com/GoogleCloudPlatform/redis-docker/blob/master/3/README.md)
+- [Official Redis Google Cloud Launcher Image Documentation](https://github.com/GoogleCloudPlatform/redis-docker/blob/master/3/README.md)
 
 ## Quick Install
 
@@ -13,7 +13,7 @@ kubectl apply -f redis.yaml
 
 ### Create Namespace
 
-It's easier if you keep utility applications in a seperate namespace called "main".  Use the following template namespace.yaml
+It's easier if you keep utility applications in a seperate namespace called "main". Use the following template namespace.yaml
 
 ```ruby
 apiVersion: v1
@@ -25,6 +25,7 @@ metadata:
 ### Create Deployment
 
 Use the following template redis-deploy.yml to launch a redis deployment with a persistent volume
+
 ```ruby
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -55,6 +56,7 @@ spec:
 ### Create Persistent Volume Claim
 
 Use the following template redis-pvc.yaml
+
 ```ruby
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -73,6 +75,7 @@ spec:
 ### Create Service
 
 Use the following template redis-svc.yaml
+
 ```ruby
 apiVersion: v1
 kind: Service
@@ -91,11 +94,20 @@ spec:
 
 ### Add to Cluster
 
-```sh
+```bash
 kubectl apply -f namespace.yaml
 kubectl apply -f redis-deploy.yaml
 kubectl apply -f redis-pvc.yaml
 kubectl apply -f redis-svc.yaml
+```
+
+## Get Cluster IP
+
+Use the following ClusterIP in your nodejs environment to connect to redis:
+
+```bash
+kubectl get svc -n main | grep redis
+redis     ClusterIP   10.11.248.94    <none>        6379/TCP    9m
 ```
 
 Congratulations you successfully installed Redis in a Kubernetes cluster.
