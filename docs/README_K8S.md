@@ -14,10 +14,8 @@ The following is a list of guides created specifically for this project for use 
 
 6.  [Install an external nginx proxy instance that points to your cluster's nodes running nginx-ingress](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-nginx-ingress-guide.md)
 
-7.  Install Helm and Tiller to assist with installation of cluster resources such as cert manager. Coming soon.
+7.  [Install Cert Manager with or without Helm to make your domain accessible via SSL](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-cert-manager-helm-tiller-guide.md)
 
-8.  Install cert manager and add certificate+issuer resources. Coming soon.
+8.  Setup a Gitlab CI Kubernetes Runner
 
-9.  Setup a Gitlab CI Kubernetes Runner
-
-10. Gitlab Continuous Integration and Deployment using Docker with Kubernetes.
+9.  Gitlab Continuous Integration and Deployment using Docker with Kubernetes.
