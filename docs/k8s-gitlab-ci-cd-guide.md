@@ -1,7 +1,7 @@
 # Gitlab CI/CD Guide
 
-[Official getting start with Gitlab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-[Official Configuration of your jobs with .gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/)
+* [Official getting start with Gitlab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
+* [Official Configuration of your jobs with .gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/)
 
 ## Basic Docker Pipeline
 
