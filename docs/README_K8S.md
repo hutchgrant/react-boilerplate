@@ -18,4 +18,4 @@ The following is a list of guides created specifically for this project for use 
 
 8.  [Setup a Gitlab CI Kubernetes Runner](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-gitlab-integration-guide.md)
 
-9.  Gitlab Continuous Integration and Deployment using Docker with Kubernetes.
+9.  [Gitlab Continuous Integration and Deployment using Docker with Kubernetes](https://github.com/hutchgrant/react-boilerplate/blob/master/docs/k8s-gitlab-ci-cd-guide.md)
