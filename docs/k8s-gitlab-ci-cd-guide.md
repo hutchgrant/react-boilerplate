@@ -1,6 +1,6 @@
 # Gitlab CI/CD Guide
 
-* [Official getting start with Gitlab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
+* [Official getting started with Gitlab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
 * [Official Configuration of your jobs with .gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/)
 
 ## Basic Docker Pipeline
@@ -195,4 +195,6 @@ From here you can re-deploy, rollback, view commit log.
 
 ![screenshots/gitlab-devops-environments.png](screenshots/gitlab-devops-environments.png)
 
-Congratulations you have setup a basic gitlab CI/CD pipeline with a kubernetes cluster.
+Here's the complete [.gitlab-ci.yml](https://github.com/hutchgrant/react-boilerplate/blob/master/.gitlab-ci.yml) React Boilerplate example file.
+
+Congratulations you have setup a basic gitlab CI/CD pipeline with a kubernetes cluster. 
